@@ -112,17 +112,18 @@
             try {
                 const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwQ3m3fXCqsVRsD8cn6jnykkdzCjFa2Z5mZ4oiAEiZDpoNHB53PXmSXgkbt5h-hclWm/exec';
                 
-                await fetch(WEB_APP_URL, {
+                // 백그라운드에서 전송 (기다리지 않음)
+                fetch(WEB_APP_URL, {
                     method: 'POST',
                     mode: 'no-cors',
                     body: JSON.stringify(formData),
                 });
 
+                // 즉시 성공 메시지 표시
                 submitted = true;
                 renderApp();
             } catch (error) {
                 console.error('Error submitting form:', error);
-                // no-cors 모드에서는 에러가 무시되므로 성공으로 처리
                 submitted = true;
                 renderApp();
             }
