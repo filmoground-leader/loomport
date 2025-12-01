@@ -110,7 +110,7 @@
             }
 
             try {
-                const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyuY_xf6QnlJQ-M7N03k9CoJWnvhiQs9R0MPDxzkafqzs10jcXqCrYiH42hB1CQVlSf/exec';
+                const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwQ3m3fXCqsVRsD8cn6jnykkdzCjFa2Z5mZ4oiAEiZDpoNHB53PXmSXgkbt5h-hclWm/exec';
                 
                 await fetch(WEB_APP_URL, {
                     method: 'POST',
@@ -120,25 +120,11 @@
 
                 submitted = true;
                 renderApp();
-                
-                setTimeout(() => {
-                    formData = { name: '', country: '', contactMethod: '', contactDetails: '', role: '' };
-                    selectedRole = null;
-                    submitted = false;
-                    renderApp();
-                }, 2000);
             } catch (error) {
                 console.error('Error submitting form:', error);
                 // no-cors 모드에서는 에러가 무시되므로 성공으로 처리
                 submitted = true;
                 renderApp();
-                
-                setTimeout(() => {
-                    formData = { name: '', country: '', contactMethod: '', contactDetails: '', role: '' };
-                    selectedRole = null;
-                    submitted = false;
-                    renderApp();
-                }, 2000);
             }
         }
 
@@ -403,9 +389,10 @@
 
                                     <button
                                         type="submit"
-                                        class="w-full py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-bold rounded-lg hover:shadow-lg transition-all mt-8"
+                                        class="w-full py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-bold rounded-lg hover:shadow-lg transition-all mt-8 flex items-center justify-center gap-2"
                                     >
                                         Get Early Access
+                                        <span>✓</span>
                                     </button>
 
                                     <p class="text-center text-xs text-slate-500">
