@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="LOOMPORT - Global B2B Platform for Vintage Clothing">
+    <title>LOOMPORT - Global B2B Platform for Vintage Clothing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script>
+        // App State
+        let formData = {
+            name: '',
+            country: '',
+            contactMethod: '',
+            contactDetails: '',
+            role: ''
+        };
+        let selectedRole = null;
+        let submitted = false;
+
+        const countries = ['Thailand', 'Vietnam', 'Malaysia', 'Indonesia', 'Singapore', 'Philippines', 'Other'];
+        const contactMethodPlaceholders = {
+            'WhatsApp': '+82 10-1234-5678',
+            'Line': 'Line ID',
+            'Facebook': 'Facebook profile URL',
+            'Email': 'your@email.com'
+        };
+
+        const buyerBenefits = [
+            'Access Korean Vintage Suppliers',
+            'Small Orders OK (From 10pcs)',
+            'Consolidated Shipping (Save 60%)'
+        ];
+
+        const sellerBenefits = [
+            'Access Global Buyers',
+            'Small Inventory Welcome',
+            'Verified Partner Network'
+        ];
+
+        // Handle form input
+        function handleInputChange(e) {
+            const { name, value } = e.target;
+            formData[name] = value;
+        }
+
+        // Handle contact method change
+        function handleContactMethodChange(method) {
+            formData.contactMethod = method;
+            formData.contactDetails = '';
+            updateContactDetailsField();
+        }
+
+        // Handle role change
+        function handleRoleChange(role) {
+            formData.role = role;
+            selectedRole = role;
+            updateRoleCards();
+        }
+
+        // Update contact details field
+        function updateContactDetailsField() {
+            const container = document.getElementById('contact-details-container');
+            if (formData.contactMethod) {
+                container.innerHTML = `
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-900 mb-2">
+                            ${formData.contactMethod} Details <span class="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            name="contactDetails"
+                            value="${formData.contactDetails}"
+                            onchange="handleInputChange(event)"
+                            oninput="handleInputChange(event)"
+                            placeholder="${contactMethodPlaceholders[formData.contactMethod]}"
+                            class="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500"
+                            required
+                        />
+                    </div>
+                `;
+            } else {
+                container.innerHTML = '';
+            }
+        }
+
+        // Update role cards
+        function updateRoleCards() {
+            ['Buyer', 'Seller', 'Both'].forEach(role => {
+                const card = document.getElementById(`role-${role}`);
+                if (selectedRole === role) {
+                    card.className = 'p-6 md:p-8 rounded-2xl border-2 border-emerald-500 bg-emerald-50 shadow-lg transition-all cursor-pointer';
+                } else {
+                    card.className = 'p-6 md:p-8 rounded-2xl border-2 border-slate-200 bg-white hover:border-emerald-300 transition-all cursor-pointer';
+                }
+            });
+        }
+
+        // Handle form submit
+        async function handleSubmit(e) {
+            e.preventDefault();
+            
+            if (!formData.name || !formData.country || !formData.contactMethod || !formData.contactDetails || !formData.role) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            try {
+                const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwQ3m3fXCqsVRsD8cn6jnykkdzCjFa2Z5mZ4oiAEiZDpoNHB53PXmSXgkbt5h-hclWm/exec';
+                
+                await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify(formData),
+                });
+
+                submitted = true;
+                renderApp();
+                
+                setTimeout(() => {
+                    formData = { name: '', country: '', contactMethod: '', contactDetails: '', role: '' };
+                    selectedRole = null;
+                    submitted = false;
+                    renderApp();
+                }, 2000);
+            } catch (error) {
+                console.error('Error submitting form:', error);
+                submitted = true;
+                renderApp();
+                
+                setTimeout(() => {
+                    formData = { name: '', country: '', contactMethod: '', contactDetails: '', role: '' };
+                    selectedRole = null;
+                    submitted = false;
+                    renderApp();
+                }, 2000);
+            }
+        }
+
+        // Main render function
+        function renderApp() {
+            const root = document.getElementById('root');
+            root.innerHTML = `
+                <div class="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50 to-slate-100">
+                    <!-- Navbar -->
+                    <nav class="sticky top-0 z-50 backdrop-blur-md bg-white/90 border-b border-emerald-200/30 shadow-sm">
+                        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+                            <div class="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-emerald-500 bg-clip-text text-transparent">
+                                LOOMPORT
+                            </div>
+                            <div class="text-sm text-slate-600 hidden sm:block">Global Vintage B2B Platform</div>
+                        </div>
+                    </nav>
+
+                    <!-- Hero Section -->
+                    <section class="relative overflow-hidden py-20 md:py-32">
+                        <div class="absolute inset-0 bg-gradient-to-br from-slate-950 via-emerald-800 to-slate-900">
+                            <div class="absolute inset-0 opacity-50 bg-gradient-to-t from-emerald-500/20 via-transparent to-transparent"></div>
+                            
+                            <svg class="absolute inset-0 w-full h-full" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice" style="opacity: 0.4">
+                                <defs>
+                                    <filter id="glow">
+                                        <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                                        <feMerge>
+                                            <feMergeNode in="coloredBlur" />
+                                            <feMergeNode in="SourceGraphic" />
+                                        </feMerge>
+                                    </filter>
+                                    <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="rgba(16, 185, 129, 0.6)" />
+                                        <stop offset="100%" stop-color="rgba(34, 197, 94, 0.8)" />
+                                    </linearGradient>
+                                </defs>
+                                
+                                ${[
+                                    { id: 0, x: 100, y: 120 },
+                                    { id: 1, x: 800, y: 90 },
+                                    { id: 2, x: 200, y: 480 },
+                                    { id: 3, x: 750, y: 420 },
+                                    { id: 4, x: 500, y: 300 },
+                                    { id: 5, x: 850, y: 240 },
+                                    { id: 6, x: 150, y: 360 },
+                                    { id: 7, x: 700, y: 510 },
+                                    { id: 8, x: 380, y: 105 },
+                                    { id: 9, x: 550, y: 495 },
+                                ].map((node, idx) => {
+                                    const otherNodes = [
+                                        { id: 0, x: 100, y: 120 },
+                                        { id: 1, x: 800, y: 90 },
+                                        { id: 2, x: 200, y: 480 },
+                                        { id: 3, x: 750, y: 420 },
+                                        { id: 4, x: 500, y: 300 },
+                                        { id: 5, x: 850, y: 240 },
+                                        { id: 6, x: 150, y: 360 },
+                                        { id: 7, x: 700, y: 510 },
+                                        { id: 8, x: 380, y: 105 },
+                                        { id: 9, x: 550, y: 495 },
+                                    ];
+
+                                    let lines = '';
+                                    otherNodes.forEach((otherNode) => {
+                                        const distance = Math.hypot(node.x - otherNode.x, node.y - otherNode.y);
+                                        if ((node.id === 0 && otherNode.id === 1) || (node.id < otherNode.id && distance < 550)) {
+                                            lines += `<line x1="${node.x}" y1="${node.y}" x2="${otherNode.x}" y2="${otherNode.y}" stroke="url(#lineGradient)" stroke-width="2" stroke-linecap="round" opacity="0.7" />`;
+                                        }
+                                    });
+
+                                    const circle = idx === 4 
+                                        ? `<circle cx="${node.x}" cy="${node.y}" r="7" fill="rgba(52, 211, 153, 1)" filter="url(#glow)" style="animation: pulse 2s ease-in-out infinite; animation-delay: ${idx * 0.15}s" /><circle cx="${node.x}" cy="${node.y}" r="5" fill="rgba(34, 197, 94, 0.9)" style="animation: pulse 2s ease-in-out infinite; animation-delay: ${idx * 0.15}s" />`
+                                        : `<circle cx="${node.x}" cy="${node.y}" r="4.5" fill="rgba(52, 211, 153, 1)" filter="url(#glow)" style="animation: pulse 2s ease-in-out infinite; animation-delay: ${idx * 0.15}s" /><circle cx="${node.x}" cy="${node.y}" r="3" fill="rgba(34, 197, 94, 0.9)" style="animation: pulse 2s ease-in-out infinite; animation-delay: ${idx * 0.15}s" />`;
+
+                                    return `<g>${lines}${circle}</g>`;
+                                }).join('')}
+                            </svg>
+                        </div>
+
+                        <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                            <h1 class="text-5xl md:text-7xl lg:text-8xl font-extrabold text-white mb-6 leading-tight drop-shadow-lg">
+                                Connect with<br />
+                                <span class="bg-gradient-to-r from-emerald-400 to-emerald-300 bg-clip-text text-transparent">
+                                    Korean Vintage Market
+                                </span>
+                            </h1>
+                            <p class="text-2xl md:text-4xl lg:text-5xl font-bold text-emerald-100 mb-8 max-w-4xl mx-auto drop-shadow">
+                                Global B2B Platform for Vintage Clothing
+                            </p>
+                            <p class="text-lg md:text-2xl text-emerald-200/80 max-w-3xl mx-auto drop-shadow">
+                                Trade with verified Korean sellers & buyers worldwide
+                            </p>
+
+                            <!-- Scroll CTA Button -->
+                            <div class="mt-16 flex flex-col items-center gap-4">
+                                <button
+                                    onclick="document.getElementById('role-section').scrollIntoView({ behavior: 'smooth' })"
+                                    class="px-8 py-4 bg-white text-emerald-600 font-bold rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all"
+                                >
+                                    Start Now
+                                </button>
+                                <div class="text-white/60 animate-bounce">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Role Selection -->
+                    <section id="role-section" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                        <div class="text-center mb-12">
+                            <h2 class="text-2xl font-semibold text-slate-900 mb-2">What are you looking for?</h2>
+                            <p class="text-slate-600 text-sm md:text-base">Choose your role to see relevant benefits</p>
+                        </div>
+
+                        <div class="grid md:grid-cols-3 gap-4 md:gap-6 mb-12">
+                            <!-- Buyer Card -->
+                            <div id="role-Buyer" class="p-6 md:p-8 rounded-2xl border-2 border-slate-200 bg-white hover:border-emerald-300 transition-all cursor-pointer" onclick="handleRoleChange('Buyer')">
+                                <h3 class="text-lg md:text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                                    <span class="text-2xl">🛍️</span> Buyer
+                                </h3>
+                                ${buyerBenefits.map(benefit => `
+                                    <div class="flex items-start gap-3 mb-3">
+                                        <span class="text-emerald-600 font-bold">✓</span>
+                                        <span class="text-slate-700">${benefit}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+
+                            <!-- Seller Card -->
+                            <div id="role-Seller" class="p-6 md:p-8 rounded-2xl border-2 border-slate-200 bg-white hover:border-emerald-300 transition-all cursor-pointer" onclick="handleRoleChange('Seller')">
+                                <h3 class="text-lg md:text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                                    <span class="text-2xl">📦</span> Seller
+                                </h3>
+                                ${sellerBenefits.map(benefit => `
+                                    <div class="flex items-start gap-3 mb-3">
+                                        <span class="text-emerald-600 font-bold">✓</span>
+                                        <span class="text-slate-700">${benefit}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+
+                            <!-- Both Card -->
+                            <div id="role-Both" class="p-6 md:p-8 rounded-2xl border-2 border-slate-200 bg-white hover:border-emerald-300 transition-all cursor-pointer" onclick="handleRoleChange('Both')">
+                                <h3 class="text-lg md:text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                                    <span class="text-2xl">🤝</span> Both
+                                </h3>
+                                <div class="flex items-start gap-3 mb-3">
+                                    <span class="text-emerald-600 font-bold">✓</span>
+                                    <span class="text-slate-700">Full Access to Both Networks</span>
+                                </div>
+                                <div class="flex items-start gap-3 mb-3">
+                                    <span class="text-emerald-600 font-bold">✓</span>
+                                    <span class="text-slate-700">Maximize Your Opportunities</span>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="text-emerald-600 font-bold">✓</span>
+                                    <span class="text-slate-700">Premium Support</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Form Section -->
+                    <section class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                        <div class="bg-white rounded-2xl shadow-xl p-6 md:p-10">
+                            <h2 class="text-2xl md:text-3xl font-bold text-slate-900 mb-8 text-center flex items-center justify-center gap-3">
+                                🌍 Get Early Access
+                            </h2>
+
+                            ${submitted ? `
+                                <div class="text-center py-12">
+                                    <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        ✓
+                                    </div>
+                                    <h3 class="text-2xl font-bold text-slate-900 mb-2">Success!</h3>
+                                    <p class="text-slate-600">We'll be in touch shortly. Thank you for joining us!</p>
+                                </div>
+                            ` : `
+                                <form onsubmit="handleSubmit(event)" class="space-y-6">
+                                    <!-- Business Name -->
+                                    <div>
+                                        <label class="block text-sm font-semibold text-slate-900 mb-2">
+                                            Business or Shop Name <span class="text-red-500">*</span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            value="${formData.name}"
+                                            onchange="handleInputChange(event)"
+                                            oninput="handleInputChange(event)"
+                                            placeholder="Your business or shop name"
+                                            class="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500"
+                                            required
+                                        />
+                                    </div>
+
+                                    <!-- Country -->
+                                    <div>
+                                        <label class="block text-sm font-semibold text-slate-900 mb-2">
+                                            Country <span class="text-red-500">*</span>
+                                        </label>
+                                        <select
+                                            name="country"
+                                            value="${formData.country}"
+                                            onchange="handleInputChange(event)"
+                                            class="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500"
+                                            required
+                                        >
+                                            <option value="">Select your country</option>
+                                            ${countries.map(country => `<option value="${country}">${country}</option>`).join('')}
+                                        </select>
+                                    </div>
+
+                                    <!-- Contact Method -->
+                                    <div>
+                                        <label class="block text-sm font-semibold text-slate-900 mb-3">
+                                            Contact Method <span class="text-red-500">*</span>
+                                        </label>
+                                        ${['WhatsApp', 'Line', 'Facebook', 'Email'].map(method => `
+                                            <label class="flex items-center p-3 border-2 border-slate-200 rounded-lg mb-2 cursor-pointer hover:border-emerald-300">
+                                                <input
+                                                    type="radio"
+                                                    name="contactMethod"
+                                                    value="${method}"
+                                                    ${formData.contactMethod === method ? 'checked' : ''}
+                                                    onchange="handleContactMethodChange('${method}')"
+                                                    class="w-4 h-4"
+                                                    required
+                                                />
+                                                <span class="ml-3 text-slate-900 font-medium">${method}</span>
+                                            </label>
+                                        `).join('')}
+                                    </div>
+
+                                    <!-- Contact Details Container -->
+                                    <div id="contact-details-container"></div>
+
+                                    <!-- Role -->
+                                    <div>
+                                        <label class="block text-sm font-semibold text-slate-900 mb-3">
+                                            I'm a: <span class="text-red-500">*</span>
+                                        </label>
+                                        ${['Buyer', 'Seller', 'Both'].map(role => `
+                                            <label class="flex items-center p-3 border-2 border-slate-200 rounded-lg mb-2 cursor-pointer hover:border-emerald-300">
+                                                <input
+                                                    type="radio"
+                                                    name="role"
+                                                    value="${role}"
+                                                    ${formData.role === role ? 'checked' : ''}
+                                                    onchange="handleInputChange(event); handleRoleChange('${role}')"
+                                                    class="w-4 h-4"
+                                                    required
+                                                />
+                                                <span class="ml-3 text-slate-900 font-medium">${role}</span>
+                                            </label>
+                                        `).join('')}
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        class="w-full py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-bold rounded-lg hover:shadow-lg transition-all mt-8 flex items-center justify-center gap-2"
+                                    >
+                                        Get Early Access
+                                        <span>✓</span>
+                                    </button>
+
+                                    <p class="text-center text-xs text-slate-500">
+                                        We'll reach out to you shortly to discuss partnership opportunities.
+                                    </p>
+                                </form>
+                            `}
+                        </div>
+                    </section>
+
+                    <!-- Footer -->
+                    <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-slate-200/50 mt-12">
+                        <div class="text-center text-slate-600">
+                            <p class="mb-2 font-semibold text-slate-900">LOOMPORT</p>
+                            <p class="text-sm">Connecting Global Vintage Communities</p>
+                            <p class="text-xs mt-4">© 2025 LOOMPORT. All rights reserved.</p>
+                        </div>
+                    </section>
+                </div>
+
+                <style>
+                    @keyframes pulse {
+                        0%, 100% { opacity: 1; }
+                        50% { opacity: 0.5; }
+                    }
+                </style>
+            `;
+        }
+
+        // Initial render
+        renderApp();
+    </script>
+</body>
+</html>
