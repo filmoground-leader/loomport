@@ -1,474 +1,472 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="LOOMPORT - Global B2B Platform for Vintage Clothing">
-    <title>LOOMPORT - Global B2B Platform for Vintage Clothing</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LOOMPORT - Global Vintage B2B Platform</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body>
-    <div id="root"></div>
-
     <script>
-        // App State
-        let formData = {
-            name: '',
-            country: '',
-            contactMethod: '',
-            contactDetails: '',
-            role: ''
-        };
-        let selectedRole = null;
-        let submitted = false;
-
-        const countries = ['Thailand', 'Vietnam', 'Malaysia', 'Indonesia', 'Singapore', 'Philippines', 'Other'];
-        const contactMethodPlaceholders = {
-            'WhatsApp': '+82 10-1234-5678',
-            'Line': 'Line ID',
-            'Facebook': 'Facebook profile URL',
-            'Email': 'your@email.com'
-        };
-
-        const buyerBenefits = [
-            'Access Korean Vintage Suppliers',
-            'Small Orders OK (From 10pcs)',
-            'Consolidated Shipping (Save 60%)'
-        ];
-
-        const sellerBenefits = [
-            'Access Global Buyers',
-            'Small Inventory Welcome',
-            'Verified Partner Network'
-        ];
-
-        // Handle form input
-        function handleInputChange(e) {
-            const { name, value } = e.target;
-            formData[name] = value;
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: '#2D5016',
+              'primary-light': '#4A7C2C',
+              accent: '#7CB342',
+              'accent-light': '#AED581',
+              lime: '#CDDC39',
+              dark: '#1B1B1B',
+            },
+            fontFamily: {
+              display: ['Sora', 'sans-serif'],
+              body: ['Inter', 'sans-serif'],
+            }
+          }
         }
+      }
+    </script>
+    <style>
+      html { scroll-behavior: smooth; }
+      body { font-family: 'Inter', sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
+      h1, h2, h3, .font-display { font-family: 'Sora', sans-serif; }
+      ::selection { background-color: #7CB342; color: white; }
+      
+      header.nav-hidden { transform: translateY(-100%); }
+      
+      @keyframes dash {
+        from { stroke-dashoffset: 200; }
+        to { stroke-dashoffset: 0; }
+      }
+      .animate-dash {
+        animation: dash 10s linear infinite;
+      }
+      
+      .lang-btn.active {
+        background-color: #7CB342;
+        color: white;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.3",
+    "react/": "https://esm.sh/react@^19.2.3/"
+  }
+}
+</script>
+</head>
+<body class="bg-white text-dark">
 
-        // Handle contact method change
-        function handleContactMethodChange(method) {
-            formData.contactMethod = method;
-            formData.contactDetails = '';
-            updateContactDetailsField();
-        }
+    <!-- Floating Language Switcher -->
+    <div id="lang-switcher" class="fixed top-24 right-4 md:right-8 z-[1001] flex flex-col gap-2 bg-white/90 backdrop-blur-sm p-1.5 rounded-2xl shadow-xl border border-gray-100">
+        <button onclick="setLanguage('en')" id="btn-en" class="lang-btn active px-3 py-1.5 rounded-xl text-xs font-bold transition-all">EN</button>
+        <button onclick="setLanguage('zh')" id="btn-zh" class="lang-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-gray-500 hover:bg-gray-100">TW</button>
+        <button onclick="setLanguage('ja')" id="btn-ja" class="lang-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-gray-500 hover:bg-gray-100">JP</button>
+    </div>
 
-        // Handle role change
-        function handleRoleChange(role) {
-            formData.role = role;
-            selectedRole = role;
-            updateRoleCards();
-        }
+    <!-- Header -->
+    <header id="main-header" class="fixed top-0 w-full bg-white/95 backdrop-blur-md z-[1000] border-b border-gray-100 transition-transform duration-500">
+        <nav class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
+                    <span class="text-white font-black text-xl">L</span>
+                </div>
+                <span class="font-display font-extrabold text-2xl tracking-tighter text-primary">LOOMPORT</span>
+            </div>
 
-        // Update contact details field
-        function updateContactDetailsField() {
-            const container = document.getElementById('contact-details-container');
-            if (formData.contactMethod) {
-                container.innerHTML = `
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-900 mb-2">
-                            ${formData.contactMethod} Details <span class="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            name="contactDetails"
-                            value="${formData.contactDetails}"
-                            onchange="handleInputChange(event)"
-                            oninput="handleInputChange(event)"
-                            placeholder="${contactMethodPlaceholders[formData.contactMethod]}"
-                            class="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500"
-                            required
-                        />
+            <ul class="hidden lg:flex items-center gap-8 font-semibold text-gray-700">
+                <li><a href="#solution" class="hover:text-accent transition-colors" data-t="nav-solution">Solution</a></li>
+                <li><a href="#features" class="hover:text-accent transition-colors" data-t="nav-features">Features</a></li>
+                <li><a href="#team" class="hover:text-accent transition-colors" data-t="nav-team">Team</a></li>
+                <li><a href="#privacy" class="hover:text-accent transition-colors" data-t="nav-privacy">Privacy</a></li>
+                <li><a href="#contact" class="hover:text-accent transition-colors" data-t="nav-contact">Contact</a></li>
+            </ul>
+
+            <a href="#contact" class="px-6 py-2.5 bg-accent text-white rounded-full text-sm font-bold shadow-lg shadow-accent/20 hover:bg-primary transition-all hover:-translate-y-0.5" data-t="nav-cta">Join Now</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="relative pt-32 pb-20 overflow-hidden min-h-[90vh] flex items-center bg-[#020617]">
+            <div class="absolute inset-0 z-0">
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(124,179,66,0.15),transparent_70%)]"></div>
+                <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+            </div>
+
+            <div class="absolute inset-0 z-[1] pointer-events-none">
+                <div class="absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2">
+                    <div class="relative">
+                        <div class="absolute -inset-16 bg-accent/20 blur-[60px] rounded-full animate-pulse"></div>
+                        <div class="w-4 h-4 bg-accent rounded-full relative z-10 shadow-[0_0_30px_rgba(124,179,66,1)] border-2 border-white/20"></div>
+                        <span class="absolute top-10 left-1/2 -translate-x-1/2 whitespace-nowrap text-white font-display font-black tracking-[0.5em] text-sm md:text-lg animate-pulse drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">KOREA</span>
+                        <svg class="absolute top-1/2 left-1/2 w-[1000px] h-[1000px] -translate-x-1/2 -translate-y-1/2 overflow-visible opacity-40">
+                            <path d="M 500 500 Q 350 700 150 850" fill="none" stroke="url(#lineGradient)" stroke-width="2" stroke-dasharray="10 10" class="animate-dash" style="animation-duration: 10s;"></path>
+                            <path d="M 500 500 Q 700 650 900 700" fill="none" stroke="url(#lineGradient)" stroke-width="2" stroke-dasharray="10 10" class="animate-dash" style="animation-duration: 8s;"></path>
+                            <path d="M 500 500 L 500 100" fill="none" stroke="url(#lineGradient)" stroke-width="1" stroke-dasharray="5 5" class="animate-dash" style="animation-duration: 15s;"></path>
+                            <defs>
+                                <linearGradient id="lineGradient" x1="50%" y1="50%" x2="0%" y2="100%">
+                                    <stop offset="0%" stop-color="#7CB342"></stop>
+                                    <stop offset="100%" stop-color="transparent"></stop>
+                                </linearGradient>
+                            </defs>
+                        </svg>
                     </div>
-                `;
-            } else {
-                container.innerHTML = '';
-            }
-        }
+                </div>
+            </div>
 
-        // Update role cards
-        function updateRoleCards() {
-            ['Buyer', 'Seller', 'Both'].forEach(role => {
-                const card = document.getElementById(`role-${role}`);
-                if (selectedRole === role) {
-                    card.className = 'p-6 md:p-8 rounded-2xl border-2 border-emerald-500 bg-emerald-50 shadow-lg transition-all cursor-pointer';
-                } else {
-                    card.className = 'p-6 md:p-8 rounded-2xl border-2 border-slate-200 bg-white hover:border-emerald-300 transition-all cursor-pointer';
-                }
-            });
-        }
+            <div class="max-w-7xl mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-16 items-center w-full">
+                <div class="space-y-10">
+                    <div class="inline-flex items-center gap-3 bg-white/5 backdrop-blur-xl px-4 py-2 rounded-full border border-white/10">
+                        <span class="flex h-2 w-2 rounded-full bg-accent animate-ping"></span>
+                        <span class="text-xs font-bold text-accent-light tracking-widest uppercase" data-t="hero-badge">Connecting East Asia Vintage Markets</span>
+                    </div>
 
-        // Handle form submit
-        async function handleSubmit(e) {
-            e.preventDefault();
-            
-            if (!formData.name || !formData.country || !formData.contactMethod || !formData.contactDetails || !formData.role) {
-                alert('Please fill in all fields');
-                return;
-            }
+                    <div class="space-y-4">
+                        <h1 class="text-5xl md:text-7xl lg:text-8xl font-display font-extrabold text-white leading-[1.05] tracking-tight">
+                            <span data-t="hero-title-1">Trade Vintage</span><br />
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-accent to-lime" data-t="hero-title-2">Smarter & Smaller</span>
+                        </h1>
+                        <p class="text-xl text-gray-400 leading-relaxed max-w-xl font-medium" data-t="hero-subtitle">
+                            From 100kg bulk orders to quality-focused 20-30 pieces. LOOMPORT connects Global buyers with premium Korean vintage sellers—with full logistics support.
+                        </p>
+                    </div>
 
-            try {
-                const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyuY_xf6QnlJQ-M7N03k9CoJWnvhiQs9R0MPDxzkafqzs10jcXqCrYiH42hB1CQVlSf/exec';
-                
-                // 전송 중 상태 표시
-                submitted = 'sending';
-                renderApp();
-                
-                // 데이터 전송 (완료될 때까지 대기)
-                await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: JSON.stringify(formData),
-                });
+                    <div class="flex flex-col sm:flex-row gap-5 pt-4">
+                        <a href="#contact" class="px-10 py-5 bg-accent text-white rounded-2xl font-bold text-xl shadow-2xl shadow-accent/40 hover:bg-primary-light transition-all hover:scale-105 text-center active:scale-95" data-t="hero-cta-primary">Start Trading</a>
+                        <a href="#solution" class="px-10 py-5 bg-white/5 backdrop-blur-md border-2 border-white/20 text-white rounded-2xl font-bold text-xl hover:bg-white/10 transition-all text-center" data-t="hero-cta-secondary">Learn More</a>
+                    </div>
 
-                // 성공 메시지 표시 (페이지 유지)
-                submitted = true;
-                renderApp();
-            } catch (error) {
-                console.error('Error submitting form:', error);
-                submitted = true;
-                renderApp();
-            }
-        }
-
-        // Main render function
-        function renderApp() {
-            const root = document.getElementById('root');
-            root.innerHTML = `
-                <div class="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50 to-slate-100">
-                    <!-- Navbar -->
-                    <nav class="sticky top-0 z-50 backdrop-blur-md bg-white/90 border-b border-emerald-200/30 shadow-sm">
-                        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-                            <div class="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-emerald-500 bg-clip-text text-transparent">
-                                LOOMPORT
+                    <div class="flex flex-wrap gap-8 pt-6">
+                        <div class="flex items-center gap-3 group">
+                            <div class="flex-shrink-0 w-8 h-8 bg-accent/20 rounded-xl flex items-center justify-center border border-accent/30">
+                                <svg class="w-4 h-4 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                             </div>
-                            <div class="text-sm text-slate-600 hidden sm:block">Global Vintage B2B Platform</div>
+                            <span class="text-sm font-bold text-gray-300" data-t="hero-feature-1">Small quantity, high quality</span>
                         </div>
-                    </nav>
-
-                    <!-- Hero Section -->
-                    <section class="relative overflow-hidden py-20 md:py-32">
-                        <div class="absolute inset-0 bg-gradient-to-br from-slate-950 via-emerald-800 to-slate-900">
-                            <div class="absolute inset-0 opacity-50 bg-gradient-to-t from-emerald-500/20 via-transparent to-transparent"></div>
-                            
-                            <svg class="absolute inset-0 w-full h-full" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice" style="opacity: 0.4">
-                                <defs>
-                                    <filter id="glow">
-                                        <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-                                        <feMerge>
-                                            <feMergeNode in="coloredBlur" />
-                                            <feMergeNode in="SourceGraphic" />
-                                        </feMerge>
-                                    </filter>
-                                    <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stop-color="rgba(16, 185, 129, 0.6)" />
-                                        <stop offset="100%" stop-color="rgba(34, 197, 94, 0.8)" />
-                                    </linearGradient>
-                                </defs>
-                                
-                                ${[
-                                    { id: 0, x: 100, y: 120 },
-                                    { id: 1, x: 800, y: 90 },
-                                    { id: 2, x: 200, y: 480 },
-                                    { id: 3, x: 750, y: 420 },
-                                    { id: 4, x: 500, y: 300 },
-                                    { id: 5, x: 850, y: 240 },
-                                    { id: 6, x: 150, y: 360 },
-                                    { id: 7, x: 700, y: 510 },
-                                    { id: 8, x: 380, y: 105 },
-                                    { id: 9, x: 550, y: 495 },
-                                ].map((node, idx) => {
-                                    const otherNodes = [
-                                        { id: 0, x: 100, y: 120 },
-                                        { id: 1, x: 800, y: 90 },
-                                        { id: 2, x: 200, y: 480 },
-                                        { id: 3, x: 750, y: 420 },
-                                        { id: 4, x: 500, y: 300 },
-                                        { id: 5, x: 850, y: 240 },
-                                        { id: 6, x: 150, y: 360 },
-                                        { id: 7, x: 700, y: 510 },
-                                        { id: 8, x: 380, y: 105 },
-                                        { id: 9, x: 550, y: 495 },
-                                    ];
-
-                                    let lines = '';
-                                    otherNodes.forEach((otherNode) => {
-                                        const distance = Math.hypot(node.x - otherNode.x, node.y - otherNode.y);
-                                        if ((node.id === 0 && otherNode.id === 1) || (node.id < otherNode.id && distance < 550)) {
-                                            lines += `<line x1="${node.x}" y1="${node.y}" x2="${otherNode.x}" y2="${otherNode.y}" stroke="url(#lineGradient)" stroke-width="2" stroke-linecap="round" opacity="0.7" />`;
-                                        }
-                                    });
-
-                                    const circle = idx === 4 
-                                        ? `<circle cx="${node.x}" cy="${node.y}" r="7" fill="rgba(52, 211, 153, 1)" filter="url(#glow)" style="animation: pulse 2s ease-in-out infinite; animation-delay: ${idx * 0.15}s" /><circle cx="${node.x}" cy="${node.y}" r="5" fill="rgba(34, 197, 94, 0.9)" style="animation: pulse 2s ease-in-out infinite; animation-delay: ${idx * 0.15}s" />`
-                                        : `<circle cx="${node.x}" cy="${node.y}" r="4.5" fill="rgba(52, 211, 153, 1)" filter="url(#glow)" style="animation: pulse 2s ease-in-out infinite; animation-delay: ${idx * 0.15}s" /><circle cx="${node.x}" cy="${node.y}" r="3" fill="rgba(34, 197, 94, 0.9)" style="animation: pulse 2s ease-in-out infinite; animation-delay: ${idx * 0.15}s" />`;
-
-                                    return `<g>${lines}${circle}</g>`;
-                                }).join('')}
-                            </svg>
-                        </div>
-
-                        <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                            <h1 class="text-5xl md:text-7xl lg:text-8xl font-extrabold text-white mb-6 leading-tight drop-shadow-lg">
-                                Stop Buying Trash.<br />
-                                <span class="bg-gradient-to-r from-emerald-400 to-emerald-300 bg-clip-text text-transparent">
-                                    I Am Your Eyes in Korea
-                                </span>
-                            </h1>
-                            <p class="text-lg md:text-2xl text-emerald-200 max-w-4xl mx-auto drop-shadow mb-4">
-                                Loomport is your personal sourcing partner. I visit wholesale markets, check quality, and ship exactly what you need. No hidden defects.
-                            </p>
-                            <p class="text-base md:text-lg text-emerald-100/80 max-w-3xl mx-auto drop-shadow">
-                                Your dedicated Korean sourcing agent for vintage fashion
-                            </p>
-
-                            <!-- Scroll CTA Button -->
-                            <div class="mt-16 flex flex-col items-center gap-4">
-                                <button
-                                    onclick="document.getElementById('role-section').scrollIntoView({ behavior: 'smooth' })"
-                                    class="px-8 py-4 bg-white text-emerald-600 font-bold rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all"
-                                >
-                                    Chat on LINE for Sourcing
-                                </button>
-                                <div class="text-white/60 animate-bounce">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                                    </svg>
-                                </div>
+                        <div class="flex items-center gap-3 group">
+                            <div class="flex-shrink-0 w-8 h-8 bg-accent/20 rounded-xl flex items-center justify-center border border-accent/30">
+                                <svg class="w-4 h-4 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                             </div>
+                            <span class="text-sm font-bold text-gray-300" data-t="hero-feature-2">Full logistics handled</span>
                         </div>
-                    </section>
-
-                    <!-- Why Choose Me Section -->
-                    <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-                        <div class="text-center mb-12">
-                            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Why Choose Me?</h2>
-                            <p class="text-lg text-slate-600">I handle the details so you don't have to</p>
-                        </div>
-
-                        <div class="grid md:grid-cols-3 gap-6 md:gap-8">
-                            <!-- Quality Control Card -->
-                            <div class="p-8 rounded-2xl border-2 border-slate-200 bg-white hover:border-emerald-300 hover:shadow-lg transition-all">
-                                <h3 class="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-                                    <span class="text-3xl">✓</span> 100% Quality Check
-                                </h3>
-                                <p class="text-slate-700 leading-relaxed">
-                                    I check every single piece before shipping. No stains, no tears. I filter out the bad ones for you.
-                                </p>
+                        <div class="flex items-center gap-3 group">
+                            <div class="flex-shrink-0 w-8 h-8 bg-accent/20 rounded-xl flex items-center justify-center border border-accent/30">
+                                <svg class="w-4 h-4 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                             </div>
-
-                            <!-- Real-time Communication Card -->
-                            <div class="p-8 rounded-2xl border-2 border-slate-200 bg-white hover:border-emerald-300 hover:shadow-lg transition-all">
-                                <h3 class="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-                                    <span class="text-3xl">📱</span> Real-time Video Call
-                                </h3>
-                                <p class="text-slate-700 leading-relaxed">
-                                    Not sure about the product? I will show you items via Video Call. Buy with confidence.
-                                </p>
-                            </div>
-
-                            <!-- Custom Sourcing Card -->
-                            <div class="p-8 rounded-2xl border-2 border-slate-200 bg-white hover:border-emerald-300 hover:shadow-lg transition-all">
-                                <h3 class="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-                                    <span class="text-3xl">🔍</span> You Order, I Find
-                                </h3>
-                                <p class="text-slate-700 leading-relaxed">
-                                    Send me photos of the style you want. I will find the best match in the Korean market.
-                                </p>
-                            </div>
+                            <span class="text-sm font-bold text-gray-300" data-t="hero-feature-3">Verified Korean sellers</span>
                         </div>
-                    </section>
-
-                    <!-- How to Start Section -->
-                    <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-slate-50 rounded-3xl">
-                        <div class="text-center mb-12">
-                            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">How to Start</h2>
-                            <p class="text-lg text-slate-600">3 simple steps to get your products</p>
-                        </div>
-
-                        <div class="grid md:grid-cols-3 gap-8">
-                            <!-- Step 1 -->
-                            <div class="text-center">
-                                <div class="w-16 h-16 bg-emerald-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">1</div>
-                                <h3 class="text-xl font-bold text-slate-900 mb-2">Send Photo</h3>
-                                <p class="text-slate-700">Send me the style references you are looking for.</p>
-                            </div>
-
-                            <!-- Step 2 -->
-                            <div class="text-center">
-                                <div class="w-16 h-16 bg-emerald-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">2</div>
-                                <h3 class="text-xl font-bold text-slate-900 mb-2">I Find & Check</h3>
-                                <p class="text-slate-700">I source items and send you inspection videos.</p>
-                            </div>
-
-                            <!-- Step 3 -->
-                            <div class="text-center">
-                                <div class="w-16 h-16 bg-emerald-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">3</div>
-                                <h3 class="text-xl font-bold text-slate-900 mb-2">Confirm & Ship</h3>
-                                <p class="text-slate-700">You approve the items, and I ship them to you.</p>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Start Small, Grow Big Section -->
-                    <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-                        <div class="bg-gradient-to-r from-emerald-600 to-emerald-500 rounded-3xl p-12 text-center text-white">
-                            <h2 class="text-3xl md:text-4xl font-bold mb-4">Start Small, Grow Big</h2>
-                            <p class="text-lg md:text-xl mb-8 max-w-2xl mx-auto">
-                                Don't worry about MOQ. We support small sample orders for your first trial. Let's start business today.
-                            </p>
-                            <button
-                                onclick="document.getElementById('form-section').scrollIntoView({ behavior: 'smooth' })"
-                                class="px-8 py-4 bg-white text-emerald-600 font-bold rounded-full hover:shadow-lg transition-all hover:scale-105"
-                            >
-                                Get Started Now
-                            </button>
-                        </div>
-                    </section>
-
-                    <!-- Form Section -->
-                    <section id="form-section" class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                        <div class="bg-white rounded-2xl shadow-xl p-6 md:p-10">
-                            <h2 class="text-2xl md:text-3xl font-bold text-slate-900 mb-8 text-center flex items-center justify-center gap-3">
-                                💬 Let's Start Your Sourcing
-                            </h2>
-
-                            ${submitted === 'sending' ? `
-                                <div class="text-center py-12">
-                                    <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
-                                        📤
-                                    </div>
-                                    <h3 class="text-2xl font-bold text-slate-900 mb-2">Sending...</h3>
-                                    <p class="text-slate-600">Please wait while we process your request.</p>
-                                </div>
-                            ` : submitted ? `
-                                <div class="text-center py-12">
-                                    <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                        ✓
-                                    </div>
-                                    <h3 class="text-2xl font-bold text-slate-900 mb-2">Success!</h3>
-                                    <p class="text-slate-600">We'll be in touch shortly. Thank you for joining us!</p>
-                                </div>
-                            ` : `
-                                <form onsubmit="handleSubmit(event)" class="space-y-6">
-                                    <!-- Business Name -->
-                                    <div>
-                                        <label class="block text-sm font-semibold text-slate-900 mb-2">
-                                            Business or Shop Name <span class="text-red-500">*</span>
-                                        </label>
-                                        <input
-                                            type="text"
-                                            name="name"
-                                            value="${formData.name}"
-                                            onchange="handleInputChange(event)"
-                                            oninput="handleInputChange(event)"
-                                            placeholder="Your business or shop name"
-                                            class="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500"
-                                            required
-                                        />
-                                    </div>
-
-                                    <!-- Country -->
-                                    <div>
-                                        <label class="block text-sm font-semibold text-slate-900 mb-2">
-                                            Country <span class="text-red-500">*</span>
-                                        </label>
-                                        <select
-                                            name="country"
-                                            value="${formData.country}"
-                                            onchange="handleInputChange(event)"
-                                            class="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500"
-                                            required
-                                        >
-                                            <option value="">Select your country</option>
-                                            ${countries.map(country => `<option value="${country}">${country}</option>`).join('')}
-                                        </select>
-                                    </div>
-
-                                    <!-- Contact Method -->
-                                    <div>
-                                        <label class="block text-sm font-semibold text-slate-900 mb-3">
-                                            Contact Method <span class="text-red-500">*</span>
-                                        </label>
-                                        ${['WhatsApp', 'Line', 'Facebook', 'Email'].map(method => `
-                                            <label class="flex items-center p-3 border-2 border-slate-200 rounded-lg mb-2 cursor-pointer hover:border-emerald-300">
-                                                <input
-                                                    type="radio"
-                                                    name="contactMethod"
-                                                    value="${method}"
-                                                    ${formData.contactMethod === method ? 'checked' : ''}
-                                                    onchange="handleContactMethodChange('${method}')"
-                                                    class="w-4 h-4"
-                                                    required
-                                                />
-                                                <span class="ml-3 text-slate-900 font-medium">${method}</span>
-                                            </label>
-                                        `).join('')}
-                                    </div>
-
-                                    <!-- Contact Details Container -->
-                                    <div id="contact-details-container"></div>
-
-                                    <!-- Role -->
-                                    <div>
-                                        <label class="block text-sm font-semibold text-slate-900 mb-3">
-                                            How can I help you? <span class="text-red-500">*</span>
-                                        </label>
-                                        ${['Buyer', 'Seller', 'Both'].map(role => `
-                                            <label class="flex items-center p-3 border-2 border-slate-200 rounded-lg mb-2 cursor-pointer hover:border-emerald-300">
-                                                <input
-                                                    type="radio"
-                                                    name="role"
-                                                    value="${role}"
-                                                    ${formData.role === role ? 'checked' : ''}
-                                                    onchange="handleInputChange(event); handleRoleChange('${role}')"
-                                                    class="w-4 h-4"
-                                                    required
-                                                />
-                                                <span class="ml-3 text-slate-900 font-medium">${role}</span>
-                                            </label>
-                                        `).join('')}
-                                    </div>
-
-                                    <button
-                                        type="submit"
-                                        class="w-full py-3 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-bold rounded-lg hover:shadow-lg transition-all mt-8 flex items-center justify-center gap-2"
-                                    >
-                                        Get Early Access
-                                        <span>✓</span>
-                                    </button>
-
-                                    <p class="text-center text-xs text-slate-500">
-                                        We'll reach out to you shortly to discuss partnership opportunities.
-                                    </p>
-                                </form>
-                            `}
-                        </div>
-                    </section>
-
-                    <!-- Footer -->
-                    <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-slate-200/50 mt-12">
-                        <div class="text-center text-slate-600">
-                            <p class="mb-2 font-semibold text-slate-900">LOOMPORT</p>
-                            <p class="text-sm">Connecting Global Vintage Communities</p>
-                            <p class="text-xs mt-4">© 2025 LOOMPORT. All rights reserved.</p>
-                        </div>
-                    </section>
+                    </div>
                 </div>
 
-                <style>
-                    @keyframes pulse {
-                        0%, 100% { opacity: 1; }
-                        50% { opacity: 0.5; }
-                    }
-                </style>
-            `;
-        }
+                <!-- Stats Visual -->
+                <div class="relative hidden lg:block">
+                    <div class="bg-white/5 backdrop-blur-2xl rounded-[48px] p-12 shadow-[0_0_50px_rgba(0,0,0,0.6)] border border-white/10 relative z-20 overflow-hidden group">
+                        <div class="grid grid-cols-2 gap-10 relative z-10">
+                            <div class="text-center p-8 bg-white/[0.03] border border-white/5 rounded-[32px] transition-all duration-500 hover:bg-white/10 hover:-translate-y-2">
+                                <div class="text-4xl lg:text-5xl font-display font-extrabold text-accent mb-2">4+</div>
+                                <div class="text-[10px] lg:text-xs font-bold text-gray-400 uppercase tracking-[0.2em]" data-t="stat-years">Years Experience</div>
+                            </div>
+                            <div class="text-center p-8 bg-white/[0.03] border border-white/5 rounded-[32px] transition-all duration-500 hover:bg-white/10 hover:-translate-y-2">
+                                <div class="text-4xl lg:text-5xl font-display font-extrabold text-accent mb-2">200M+</div>
+                                <div class="text-[10px] lg:text-xs font-bold text-gray-400 uppercase tracking-[0.2em]" data-t="stat-volume">KRW Traded</div>
+                            </div>
+                            <div class="text-center p-8 bg-white/[0.03] border border-white/5 rounded-[32px] transition-all duration-500 hover:bg-white/10 hover:-translate-y-2">
+                                <div class="text-4xl lg:text-5xl font-display font-extrabold text-accent mb-2">20-30</div>
+                                <div class="text-[10px] lg:text-xs font-bold text-gray-400 uppercase tracking-[0.2em]" data-t="stat-quantity">Pieces Minimum</div>
+                            </div>
+                            <div class="text-center p-8 bg-white/[0.03] border border-white/5 rounded-[32px] transition-all duration-500 hover:bg-white/10 hover:-translate-y-2">
+                                <div class="text-4xl lg:text-5xl font-display font-extrabold text-accent mb-2">100%</div>
+                                <div class="text-[10px] lg:text-xs font-bold text-gray-400 uppercase tracking-[0.2em]" data-t="stat-inspection">Quality Checked</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        // Initial render
-        renderApp();
+        <!-- Solution Section -->
+        <section id="solution" class="py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <span class="px-4 py-1.5 bg-accent/10 text-accent text-xs font-bold uppercase tracking-widest rounded-full mb-4 inline-block" data-t="problem-tag">Why LOOMPORT</span>
+                    <h2 class="text-4xl md:text-5xl font-display font-extrabold text-primary mb-6" data-t="problem-title">From Bulk Headaches to Smart Trading</h2>
+                    <p class="text-gray-500 text-lg" data-t="problem-subtitle">Traditional vintage wholesale forces you into risky 100-200kg bulk purchases. LOOMPORT changes everything.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="group bg-red-50/50 rounded-[32px] p-8 md:p-12 border-2 border-red-100 hover:border-red-200 transition-all">
+                        <div class="w-16 h-16 bg-red-500 rounded-2xl flex items-center justify-center text-3xl mb-8 shadow-lg shadow-red-200">😰</div>
+                        <h3 class="text-2xl font-display font-bold text-red-900 mb-6" data-t="problem-card-title">Traditional Wholesale</h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-start gap-3"><span class="text-red-500 font-bold text-lg leading-none mt-1">✕</span><span class="text-red-800/80 font-medium" data-t="problem-1">Must buy 100-200kg minimum</span></li>
+                            <li class="flex items-start gap-3"><span class="text-red-500 font-bold text-lg leading-none mt-1">✕</span><span class="text-red-800/80 font-medium" data-t="problem-2">Unknown quality until arrival</span></li>
+                            <li class="flex items-start gap-3"><span class="text-red-500 font-bold text-lg leading-none mt-1">✕</span><span class="text-red-800/80 font-medium" data-t="problem-3">Complex customs & logistics</span></li>
+                            <li class="flex items-start gap-3"><span class="text-red-500 font-bold text-lg leading-none mt-1">✕</span><span class="text-red-800/80 font-medium" data-t="problem-4">High upfront capital required</span></li>
+                            <li class="flex items-start gap-3"><span class="text-red-500 font-bold text-lg leading-none mt-1">✕</span><span class="text-red-800/80 font-medium" data-t="problem-5">Limited seller options</span></li>
+                        </ul>
+                    </div>
+                    <div class="group bg-accent-light/10 rounded-[32px] p-8 md:p-12 border-2 border-accent/20 hover:border-accent transition-all">
+                        <div class="w-16 h-16 bg-accent rounded-2xl flex items-center justify-center text-3xl mb-8 shadow-lg shadow-accent/20">✨</div>
+                        <h3 class="text-2xl font-display font-bold text-primary mb-6" data-t="solution-card-title">LOOMPORT Solution</h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-start gap-3"><span class="text-accent font-bold text-lg leading-none mt-1">✓</span><span class="text-primary font-medium" data-t="solution-1">Start with just 20-30 pieces</span></li>
+                            <li class="flex items-start gap-3"><span class="text-accent font-bold text-lg leading-none mt-1">✓</span><span class="text-primary font-medium" data-t="solution-2">Every item quality inspected</span></li>
+                            <li class="flex items-start gap-3"><span class="text-accent font-bold text-lg leading-none mt-1">✓</span><span class="text-primary font-medium" data-t="solution-3">Full logistics & customs handled</span></li>
+                            <li class="flex items-start gap-3"><span class="text-accent font-bold text-lg leading-none mt-1">✓</span><span class="text-primary font-medium" data-t="solution-4">Lower risk, flexible ordering</span></li>
+                            <li class="flex items-start gap-3"><span class="text-accent font-bold text-lg leading-none mt-1">✓</span><span class="text-primary font-medium" data-t="solution-5">Access multiple Korean sellers</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="py-24 bg-gray-50">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <span class="px-4 py-1.5 bg-primary/5 text-primary text-xs font-bold uppercase tracking-widest rounded-full mb-4 inline-block" data-t="features-tag">Core Features</span>
+                    <h2 class="text-4xl md:text-5xl font-display font-extrabold text-primary mb-6" data-t="features-title">Everything You Need to Trade with Confidence</h2>
+                    <p class="text-gray-500 text-lg" data-t="features-subtitle">We handle the complexity so you can focus on growing your vintage business.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Feature Cards -->
+                    <div class="bg-white p-10 rounded-[32px] shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all border border-gray-100">
+                        <div class="w-16 h-16 bg-gradient-to-br from-accent to-primary-light rounded-2xl flex items-center justify-center text-3xl mb-8 shadow-lg shadow-accent/20">📦</div>
+                        <h3 class="text-xl font-display font-bold text-primary mb-4" data-t="feature-1-title">Small Quantity Orders</h3>
+                        <p class="text-gray-500 leading-relaxed text-sm" data-t="feature-1-desc">Order as few as 20-30 pieces instead of 100kg+ bulk. Test products, reduce risk, and manage inventory efficiently.</p>
+                    </div>
+                    <div class="bg-white p-10 rounded-[32px] shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all border border-gray-100">
+                        <div class="w-16 h-16 bg-gradient-to-br from-accent to-primary-light rounded-2xl flex items-center justify-center text-3xl mb-8 shadow-lg shadow-accent/20">✅</div>
+                        <h3 class="text-xl font-display font-bold text-primary mb-4" data-t="feature-2-title">Quality Inspection</h3>
+                        <p class="text-gray-500 leading-relaxed text-sm" data-t="feature-2-desc">Every item is personally inspected before shipping. No surprises, no disappointments—only quality vintage pieces.</p>
+                    </div>
+                    <div class="bg-white p-10 rounded-[32px] shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all border border-gray-100">
+                        <div class="w-16 h-16 bg-gradient-to-br from-accent to-primary-light rounded-2xl flex items-center justify-center text-3xl mb-8 shadow-lg shadow-accent/20">🚚</div>
+                        <h3 class="text-xl font-display font-bold text-primary mb-4" data-t="feature-3-title">Full Logistics Support</h3>
+                        <p class="text-gray-500 leading-relaxed text-sm" data-t="feature-3-desc">We handle shipping, customs clearance, and delivery. From Seoul to your warehouse—completely hassle-free.</p>
+                    </div>
+                    <div class="bg-white p-10 rounded-[32px] shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all border border-gray-100">
+                        <div class="w-16 h-16 bg-gradient-to-br from-accent to-primary-light rounded-2xl flex items-center justify-center text-3xl mb-8 shadow-lg shadow-accent/20">🌏</div>
+                        <h3 class="text-xl font-display font-bold text-primary mb-4" data-t="feature-4-title">Multiple Sellers, One Platform</h3>
+                        <p class="text-gray-500 leading-relaxed text-sm" data-t="feature-4-desc">Connect with verified Korean vintage sellers in one place. Compare styles, prices, and inventory with a click.</p>
+                    </div>
+                    <div class="bg-white p-10 rounded-[32px] shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all border border-gray-100">
+                        <div class="w-16 h-16 bg-gradient-to-br from-accent to-primary-light rounded-2xl flex items-center justify-center text-3xl mb-8 shadow-lg shadow-accent/20">💳</div>
+                        <h3 class="text-xl font-display font-bold text-primary mb-4" data-t="feature-5-title">Secure Payments</h3>
+                        <p class="text-gray-500 leading-relaxed text-sm" data-t="feature-5-desc">Protected transactions with escrow service. Your payment is safe until you confirm delivery satisfaction.</p>
+                    </div>
+                    <div class="bg-white p-10 rounded-[32px] shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all border border-gray-100">
+                        <div class="w-16 h-16 bg-gradient-to-br from-accent to-primary-light rounded-2xl flex items-center justify-center text-3xl mb-8 shadow-lg shadow-accent/20">📊</div>
+                        <h3 class="text-xl font-display font-bold text-primary mb-4" data-t="feature-6-title">Market Insights</h3>
+                        <p class="text-gray-500 leading-relaxed text-sm" data-t="feature-6-desc">Access real-time data on trending styles, pricing, and demand across Global and East Asia markets.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team Section -->
+        <section id="team" class="py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <span class="px-4 py-1.5 bg-accent/5 text-accent text-xs font-bold uppercase tracking-widest rounded-full mb-4 inline-block" data-t="team-tag">Our Team</span>
+                    <h2 class="text-4xl md:text-5xl font-display font-extrabold text-primary mb-6" data-t="team-title">Built by Vintage Traders, For Vintage Traders</h2>
+                    <p class="text-gray-500 text-lg" data-t="team-subtitle">We've spent 4+ years in the vintage clothing business, experiencing every challenge firsthand. Now we're building the platform we always wished existed.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="bg-gray-50 p-10 rounded-[40px] hover:bg-white transition-all shadow-sm border border-transparent hover:border-accent/20">
+                        <div class="w-24 h-24 bg-accent/10 rounded-full flex items-center justify-center text-4xl mx-auto mb-6">🎯</div>
+                        <h3 class="text-xl font-display font-bold text-primary mb-1" data-t="team-1-name">Operations Team</h3>
+                        <p class="text-accent font-bold text-xs uppercase tracking-widest mb-4" data-t="team-1-role">Quality & Logistics</p>
+                        <p class="text-gray-500 text-sm" data-t="team-1-bio">Expert inspectors and logistics coordinators ensuring every shipment meets our quality standards.</p>
+                    </div>
+                    <div class="bg-gray-50 p-10 rounded-[40px] hover:bg-white transition-all shadow-sm border border-transparent hover:border-accent/20">
+                        <div class="w-24 h-24 bg-accent/10 rounded-full flex items-center justify-center text-4xl mx-auto mb-6">🤝</div>
+                        <h3 class="text-xl font-display font-bold text-primary mb-1" data-t="team-2-name">Partnership Team</h3>
+                        <p class="text-accent font-bold text-xs uppercase tracking-widest mb-4" data-t="team-2-role">Seller Relations</p>
+                        <p class="text-gray-500 text-sm" data-t="team-2-bio">Building relationships with premium vintage sellers across Korea to bring you the best selection.</p>
+                    </div>
+                    <div class="bg-gray-50 p-10 rounded-[40px] hover:bg-white transition-all shadow-sm border border-transparent hover:border-accent/20">
+                        <div class="w-24 h-24 bg-accent/10 rounded-full flex items-center justify-center text-4xl mx-auto mb-6">💡</div>
+                        <h3 class="text-xl font-display font-bold text-primary mb-1" data-t="team-3-name">Customer Success</h3>
+                        <p class="text-accent font-bold text-xs uppercase tracking-widest mb-4" data-t="team-3-role">Your Growth Partners</p>
+                        <p class="text-gray-500 text-sm" data-t="team-3-bio">Dedicated support team helping you navigate the platform and optimize your vintage business.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-24 bg-primary relative overflow-hidden">
+            <div class="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-white/5 rounded-full blur-[100px]"></div>
+            <div class="max-w-7xl mx-auto px-6 relative z-10">
+                <div class="grid lg:grid-cols-2 gap-16 items-center">
+                    <div class="text-white space-y-6">
+                        <h2 class="text-4xl md:text-5xl font-display font-extrabold" data-t="cta-title">Ready to Transform Your Vintage Business?</h2>
+                        <p class="text-xl text-white/70" data-t="cta-subtitle">Join the waitlist and be among the first to access LOOMPORT when we launch. No commitment required.</p>
+                    </div>
+                    <div class="bg-white rounded-[40px] p-8 md:p-12 shadow-2xl">
+                        <form id="contact-form" class="space-y-6">
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <input type="text" id="form-shop" required class="w-full px-5 py-3 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-accent outline-none" placeholder="Shop Name">
+                                <input type="text" id="form-id" required class="w-full px-5 py-3 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-accent outline-none" placeholder="Line ID">
+                            </div>
+                            <input type="text" id="form-country" required class="w-full px-5 py-3 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-accent outline-none" placeholder="Country">
+                            <select id="form-category" required class="w-full px-5 py-3 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-accent outline-none appearance-none">
+                                <option value="" data-t="form-select">Select Category...</option>
+                                <option value="men" data-t="form-cat-men">Men's Clothing</option>
+                                <option value="women" data-t="form-cat-women">Women's Clothing</option>
+                                <option value="kids" data-t="form-cat-kids">Children's Clothing</option>
+                                <option value="other" data-t="form-cat-other">Other</option>
+                            </select>
+                            <button type="submit" id="submit-btn" class="w-full py-5 bg-accent text-white rounded-2xl font-bold text-xl shadow-lg hover:bg-primary-light transition-all" data-t="form-submit">Join Waitlist</button>
+                            <p id="success-msg" class="hidden text-accent font-bold text-center mt-4" data-t="form-success">Thank you! We'll contact you soon.</p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Privacy Section -->
+        <section id="privacy" class="py-24 bg-gray-50/50">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="grid lg:grid-cols-3 gap-16">
+                    <div class="lg:col-span-1">
+                        <h2 class="text-4xl font-display font-extrabold text-primary mb-6" data-t="privacy-title">Privacy Policy</h2>
+                        <p class="text-gray-500" data-t="privacy-subtitle">Loomport values your business privacy.</p>
+                    </div>
+                    <div class="lg:col-span-2 grid md:grid-cols-2 gap-8">
+                        <div class="p-8 bg-white rounded-[32px] shadow-sm">
+                            <h3 class="font-bold text-primary mb-3" data-t="privacy-section-1-title">Data Collection</h3>
+                            <p class="text-gray-500 text-sm" data-t="privacy-section-1-desc">Limited personal info such as email or SNS IDs.</p>
+                        </div>
+                        <div class="p-8 bg-white rounded-[32px] shadow-sm">
+                            <h3 class="font-bold text-primary mb-3" data-t="privacy-section-2-title">Purpose</h3>
+                            <p class="text-gray-500 text-sm" data-t="privacy-section-2-desc">Only for business communication.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-dark text-gray-500 py-12">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+            <span class="font-display font-extrabold text-xl text-white">LOOMPORT</span>
+            <span class="text-xs uppercase tracking-widest" data-t="footer-copyright">© 2026 LOOMPORT. All rights reserved.</span>
+            <a href="mailto:filmoground@gmail.com" class="text-white hover:text-accent transition-colors font-bold">filmoground@gmail.com</a>
+        </div>
+    </footer>
+
+    <script>
+      const translations = {
+        en: {
+          'nav-solution': 'Solution', 'nav-features': 'Features', 'nav-team': 'Team', 'nav-privacy': 'Privacy', 'nav-contact': 'Contact', 'nav-cta': 'Join Now',
+          'hero-badge': 'Connecting East Asia Vintage Markets', 'hero-title-1': 'Trade Vintage', 'hero-title-2': 'Smarter & Smaller', 'hero-subtitle': 'From 100kg bulk orders to quality-focused 20-30 pieces. LOOMPORT connects Global buyers with premium Korean vintage sellers.',
+          'hero-cta-primary': 'Start Trading', 'hero-cta-secondary': 'Learn More',
+          'hero-feature-1': 'Small quantity, high quality', 'hero-feature-2': 'Full logistics handled', 'hero-feature-3': 'Verified Korean sellers',
+          'stat-years': 'Years Experience', 'stat-volume': 'KRW Traded', 'stat-quantity': 'Pieces Minimum', 'stat-inspection': 'Quality Checked',
+          'problem-tag': 'Why LOOMPORT', 'problem-title': 'From Bulk Headaches to Smart Trading', 'problem-subtitle': 'Traditional vintage wholesale forces you into risky purchases. LOOMPORT changes everything.',
+          'problem-card-title': 'Traditional Wholesale', 'problem-1': 'Must buy 100-200kg minimum', 'problem-2': 'Unknown quality until arrival', 'problem-3': 'Complex customs & logistics', 'problem-4': 'High upfront capital', 'problem-5': 'Limited seller options',
+          'solution-card-title': 'LOOMPORT Solution', 'solution-1': 'Start with 20-30 pieces', 'solution-2': 'Every item quality checked', 'solution-3': 'Full logistics handled', 'solution-4': 'Lower risk, flexible ordering', 'solution-5': 'Access multiple sellers',
+          'features-tag': 'Core Features', 'features-title': 'Confident Trading', 'features-subtitle': 'We handle complexity.',
+          'feature-1-title': 'Small Orders', 'feature-1-desc': '20-30 pieces minimum.',
+          'feature-2-title': 'Inspection', 'feature-2-desc': 'Manual quality check.',
+          'feature-3-title': 'Logistics', 'feature-3-desc': 'Door-to-door delivery.',
+          'feature-4-title': 'Selection', 'feature-4-desc': 'Multiple verified sellers.',
+          'feature-5-title': 'Payments', 'feature-5-desc': 'Secure escrow service.',
+          'feature-6-title': 'Insights', 'feature-6-desc': 'Market data and trends.',
+          'team-tag': 'Our Team', 'team-title': 'By Traders, For Traders', 'team-subtitle': '4+ years in vintage clothing industry.',
+          'team-1-name': 'Ops Team', 'team-1-role': 'Logistics', 'team-1-bio': 'Quality assurance.',
+          'team-2-name': 'Partnerships', 'team-2-role': 'Sellers', 'team-2-bio': 'Seller network.',
+          'team-3-name': 'Success', 'team-3-role': 'Support', 'team-3-bio': 'Growth partners.',
+          'cta-title': 'Transform Your Business', 'cta-subtitle': 'Join the waitlist.',
+          'form-select': 'Select...', 'form-cat-men': "Men", 'form-cat-women': "Women", 'form-cat-kids': "Kids", 'form-cat-other': 'Other',
+          'form-submit': 'Join Waitlist', 'form-success': "Thank you!",
+          'privacy-title': 'Privacy Policy', 'privacy-subtitle': 'We value your privacy.',
+          'privacy-section-1-title': 'Collection', 'privacy-section-1-desc': 'Limited SNS IDs/Email.',
+          'privacy-section-2-title': 'Purpose', 'privacy-section-2-desc': 'Business contact only.',
+          'footer-copyright': '© 2026 LOOMPORT. All rights reserved.'
+        },
+        zh: {
+          'nav-solution': '解決方案', 'nav-features': '特點', 'nav-team': '團隊', 'nav-privacy': '隱私', 'nav-contact': '聯絡', 'nav-cta': '立即加入',
+          'hero-badge': '連結東亞古著市場', 'hero-title-1': '更聰明的', 'hero-title-2': '小批量交易', 'hero-subtitle': '從100公斤大批量到精選20-30件。LOOMPORT連結全球買家與優質韓國古著賣家。',
+          'hero-cta-primary': '開始交易', 'hero-cta-secondary': '了解更多',
+          'hero-feature-1': '小批量高品質', 'hero-feature-2': '完整物流', 'hero-feature-3': '認證韓國賣家',
+          'problem-tag': '為什麼選擇LOOMPORT', 'problem-title': '從大批量困擾到聰明交易', 'problem-subtitle': '傳統古著批發被迫承擔風險。LOOMPORT改變一切。',
+          'problem-card-title': '傳統批發', 'problem-1': '必須採購100-200公斤起', 'problem-2': '到貨前品質未知', 'problem-3': '複雜的報關', 'problem-4': '需要高額預付資金', 'problem-5': '賣家選擇有限',
+          'solution-card-title': 'LOOMPORT解決方案', 'solution-1': '20-30件起訂', 'solution-2': '每件品質檢驗', 'solution-3': '完整物流代辦', 'solution-4': '低風險彈性訂購', 'solution-5': '接觸多家賣家',
+          'cta-title': '轉型您的古著事業', 'cta-subtitle': '加入候補名單。',
+          'form-select': '請選擇...', 'form-cat-men': "男裝", 'form-cat-women': "女裝", 'form-cat-kids': "童裝", 'form-cat-other': '其他',
+          'form-submit': '加入候補名單', 'form-success': '感謝您！',
+          'privacy-title': '隱私政策', 'privacy-subtitle': '重視您的業務隱私。',
+          'footer-copyright': '© 2026 LOOMPORT. 版權所有。'
+        },
+        ja: {
+          'nav-solution': '解決策', 'nav-features': '特徴', 'nav-team': 'チーム', 'nav-privacy': 'プライバシー', 'nav-contact': '連絡先', 'nav-cta': '今すぐ参加',
+          'hero-badge': '東アジアヴィンテージ市場を繋ぐ', 'hero-title-1': 'スマートな', 'hero-title-2': '小ロット取引', 'hero-subtitle': '100kgから厳選20-30点へ。LOOMPORTは世界中のバイヤーと韓国の優良セラーを繋ぎます。',
+          'hero-cta-primary': '取引開始', 'hero-cta-secondary': '詳細',
+          'hero-feature-1': '小ロット・高品質', 'hero-feature-2': '物流サポート', 'hero-feature-3': '認証済み韓国セラー',
+          'problem-tag': 'LOOMPORTの理由', 'problem-title': '大量仕入れの悩みから解放', 'problem-subtitle': '従来の卸売はリスクが高いです。LOOMPORTが変えます。',
+          'problem-card-title': '従来の卸売', 'problem-1': '最低100-200kg必須', 'problem-2': '品質が不明', 'problem-3': '複雑な通関', 'problem-4': '高額な初期費用', 'problem-5': 'セラーが限定的',
+          'solution-card-title': 'LOOMPORTの解決策', 'solution-1': '20-30点から開始', 'solution-2': '全数品質検査', 'solution-3': '通関・配送代行', 'solution-4': '低リスク・柔軟な発注', 'solution-5': '複数セラーにアクセス',
+          'cta-title': 'ビジネスを変革しましょう', 'cta-subtitle': 'ウェイティングリストに参加。',
+          'form-select': '選択してください...', 'form-cat-men': "紳士服", 'form-cat-women': "婦人服", 'form-cat-kids': "子供服", 'form-cat-other': 'その他',
+          'form-submit': 'リストに参加', 'form-success': 'ありがとうございます！',
+          'privacy-title': 'プライバシーポリシー', 'privacy-subtitle': 'プライバシーを尊重します。',
+          'footer-copyright': '© 2026 LOOMPORT. All rights reserved.'
+        }
+      };
+
+      let currentLang = 'en';
+
+      function setLanguage(lang) {
+        currentLang = lang;
+        document.querySelectorAll('[data-t]').forEach(el => {
+          const key = el.getAttribute('data-t');
+          if (translations[lang][key]) {
+            el.innerText = translations[lang][key];
+          }
+        });
+        
+        document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active', 'text-white'));
+        document.getElementById(`btn-${lang}`).classList.add('active', 'text-white');
+      }
+
+      // Scroll header effect
+      let lastScrollY = window.scrollY;
+      window.addEventListener('scroll', () => {
+        const header = document.getElementById('main-header');
+        if (window.scrollY > lastScrollY && window.scrollY > 100) {
+          header.classList.add('nav-hidden');
+        } else {
+          header.classList.remove('nav-hidden');
+        }
+        lastScrollY = window.scrollY;
+      });
+
+      // Form Handling
+      document.getElementById('contact-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('submit-btn');
+        const msg = document.getElementById('success-msg');
+        btn.disabled = true;
+        btn.innerText = '...';
+        setTimeout(() => {
+          btn.classList.add('hidden');
+          msg.classList.remove('hidden');
+          e.target.reset();
+        }, 1000);
+      });
+
+      // Initialize
+      setLanguage('en');
     </script>
 </body>
 </html>
