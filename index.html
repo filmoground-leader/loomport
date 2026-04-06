@@ -1,496 +1,1917 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LOOMPORT - Global Vintage B2B Platform</title>
-    <!-- Google Fonts -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LOOMPORT | Korean Vintage Sourcing Infrastructure</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              primary: '#2D5016',
-              'primary-light': '#4A7C2C',
-              accent: '#7CB342',
-              'accent-light': '#AED581',
-              lime: '#CDDC39',
-              dark: '#1B1B1B',
-            },
-            fontFamily: {
-              display: ['Sora', 'sans-serif'],
-              body: ['Inter', 'sans-serif'],
-            }
-          }
-        }
-      }
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-      html { scroll-behavior: smooth; }
-      body { font-family: 'Inter', sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
-      h1, h2, h3, .font-display { font-family: 'Sora', sans-serif; }
-      ::selection { background-color: #7CB342; color: white; }
-      
-      header.nav-hidden { transform: translateY(-100%); }
-      
-      @keyframes dash {
-        from { stroke-dashoffset: 200; }
-        to { stroke-dashoffset: 0; }
-      }
-      .animate-dash {
-        animation: dash 10s linear infinite;
-      }
-      
-      .lang-btn.active {
-        background-color: #7CB342;
-        color: white;
-        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-      }
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #3b82f6;
+            --text-dark: #111827;
+            --text-medium: #374151;
+            --text-gray: #6b7280;
+            --text-light: #9ca3af;
+            --bg-white: #ffffff;
+            --bg-light: #f8fafc;
+            --bg-section: #f1f5f9;
+            --border: #e5e7eb;
+            --line-green: #06c755;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            touch-action: manipulation;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-dark);
+            background: var(--bg-white);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            word-break: keep-all;
+            overflow-wrap: break-word;
+            overflow-x: hidden;
+        }
+
+        body.lang-ja {
+            line-break: strict;
+        }
+
+        body.lang-en {
+            word-break: normal;
+        }
+
+        body.lang-zh {
+            font-family: 'Noto Sans TC', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-break: strict;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-dark);
+            letter-spacing: -0.5px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* Language Switcher */
+        .lang-switch {
+            display: flex;
+            align-items: center;
+            background: var(--bg-light);
+            border-radius: 6px;
+            padding: 3px;
+            gap: 2px;
+        }
+
+        .lang-btn {
+            padding: 6px 12px;
+            border: none;
+            background: transparent;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-gray);
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .lang-btn.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .lang-btn:hover:not(.active) {
+            color: var(--text-dark);
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        nav a {
+            font-size: 13px;
+            color: var(--text-gray);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--text-dark);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 85px 40px 60px;
+            position: relative;
+            background: linear-gradient(180deg, #f0f7ff 0%, #e8f4ff 30%, #f8fafc 100%);
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .hero-bg svg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120%;
+            height: 120%;
+            opacity: 0.7;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(37, 99, 235, 0.06);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 24px;
+        }
+
+        .badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: badgePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); }
+            50% { opacity: 0.6; box-shadow: 0 0 0 6px rgba(37, 99, 235, 0); }
+        }
+
+        .hero-subtitle {
+            font-size: 15px;
+            color: var(--text-gray);
+            margin-bottom: 12px;
+        }
+
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+
+        .hero h1 .highlight {
+            color: var(--primary);
+        }
+
+        .hero-description {
+            font-size: 14px;
+            color: var(--text-gray);
+            margin-bottom: 32px;
+            line-height: 1.8;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            margin-bottom: 16px;
+        }
+
+        .hero-cta:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .hero-note {
+            font-size: 11px;
+            color: var(--text-light);
+        }
+
+        /* LINE Button */
+        .line-btn {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--line-green);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(6, 199, 85, 0.35);
+            z-index: 100;
+            transition: all 0.2s;
+        }
+
+        .line-btn:hover {
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .line-btn svg {
+            width: 26px;
+            height: 26px;
+        }
+
+        /* Sections */
+        section {
+            padding: 80px 40px;
+        }
+
+        .section-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--primary);
+            letter-spacing: 2.5px;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 26px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--text-dark);
+        }
+
+        /* Value Proposition */
+        .value-section {
+            background: var(--bg-white);
+        }
+
+        .value-cards {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .value-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 28px;
+        }
+
+        .card-label {
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .value-card:first-child .card-label {
+            background: #f3f4f6;
+            color: var(--text-gray);
+        }
+
+        .value-card:last-child .card-label {
+            background: rgba(37, 99, 235, 0.08);
+            color: var(--primary);
+        }
+
+        .value-card h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-dark);
+        }
+
+        .value-card ul {
+            list-style: none;
+        }
+
+        .value-card li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 13px;
+            color: var(--text-medium);
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .bullet-icon {
+            flex-shrink: 0;
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+        }
+
+        .bullet-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .value-card:first-child .bullet-icon {
+            color: #9ca3af;
+        }
+
+        .value-card:last-child .bullet-icon {
+            color: var(--primary);
+        }
+
+        .value-card:last-child li strong {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .cards-arrow {
+            color: var(--primary);
+            opacity: 0.4;
+        }
+
+        .cards-arrow svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        /* Infrastructure */
+        .infra-section {
+            background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 50%, #f8fafc 100%);
+            padding: 70px 40px 80px;
+        }
+
+        .infra-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .infra-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 50px;
+            margin-bottom: 40px;
+        }
+
+        .infra-header h2 {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .infra-features {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .infra-features li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            color: var(--text-medium);
+        }
+
+        .feature-number {
+            width: 26px;
+            height: 26px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--primary);
+            background: white;
+            flex-shrink: 0;
+        }
+
+        /* Map Container */
+        .map-container {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .map-visual {
+            position: relative;
+            width: 100%;
+        }
+
+        .brush-strokes {
+            width: 100%;
+            height: auto;
+        }
+
+        .brush-strokes svg {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* SVG Node Animations */
+        .hub-pulse {
+            animation: hubPulse 2s ease-out infinite;
+            transform-origin: center;
+        }
+
+        @keyframes hubPulse {
+            0% { r: 12; opacity: 0.3; }
+            100% { r: 28; opacity: 0; }
+        }
+
+        .japan-pulse {
+            animation: japanPulse 2s ease-out infinite;
+        }
+
+        .japan-pulse-1 { animation-delay: 0s; }
+        .japan-pulse-2 { animation-delay: 0.3s; }
+        .japan-pulse-3 { animation-delay: 0.6s; }
+        .japan-pulse-4 { animation-delay: 0.2s; }
+        .japan-pulse-5 { animation-delay: 0.5s; }
+
+        @keyframes japanPulse {
+            0% { r: 9; opacity: 0.3; }
+            100% { r: 22; opacity: 0; }
+        }
+
+        .hub-dot, .japan-dot {
+            animation: dotGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes dotGlow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        /* Flow Animation */
+        .flow-line {
+            animation: flowDash 3s linear infinite;
+        }
+
+        .flow-line-1 { animation-duration: 4s; }
+        .flow-line-2 { animation-duration: 3.5s; animation-delay: 0.5s; }
+        .flow-line-3 { animation-duration: 3s; animation-delay: 1s; }
+        .flow-line-4 { animation-duration: 3.8s; animation-delay: 0.3s; }
+        .flow-line-5 { animation-duration: 3.2s; animation-delay: 0.8s; }
+
+        @keyframes flowDash {
+            0% { stroke-dashoffset: 0; }
+            100% { stroke-dashoffset: -24; }
+        }
+
+        .inflow-line {
+            animation: inflowDash 2.5s linear infinite;
+        }
+
+        .inflow-line-1 { animation-delay: 0s; }
+        .inflow-line-2 { animation-delay: 0.4s; }
+        .inflow-line-3 { animation-delay: 0.8s; }
+        .inflow-line-4 { animation-delay: 0.2s; }
+        .inflow-line-5 { animation-delay: 0.6s; }
+        .inflow-line-6 { animation-delay: 1s; }
+
+        @keyframes inflowDash {
+            0% { stroke-dashoffset: 0; }
+            100% { stroke-dashoffset: -16; }
+        }
+
+        /* Supplier Pulse */
+        .supplier-pulse {
+            animation: supplierPulse 2s ease-out infinite;
+        }
+
+        .supplier-pulse-1 { animation-delay: 0s; }
+        .supplier-pulse-2 { animation-delay: 0.25s; }
+        .supplier-pulse-3 { animation-delay: 0.5s; }
+        .supplier-pulse-4 { animation-delay: 0.15s; }
+        .supplier-pulse-5 { animation-delay: 0.4s; }
+        .supplier-pulse-6 { animation-delay: 0.75s; }
+
+        @keyframes supplierPulse {
+            0% { r: 4; opacity: 0.3; }
+            50% { r: 10; opacity: 0.1; }
+            100% { r: 4; opacity: 0.3; }
+        }
+
+        /* Co-creation */
+        .cocreation-section {
+            background: var(--bg-white);
+            overflow: hidden;
+        }
+
+        .cocreation-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .cocreation-content .section-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .cocreation-content .section-label::before,
+        .cocreation-content .section-label::after {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: var(--text-light);
+        }
+
+        .cocreation-content h2 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-dark);
+        }
+
+        .cocreation-content > p {
+            font-size: 14px;
+            color: var(--text-gray);
+            margin-bottom: 24px;
+            line-height: 1.8;
+        }
+
+        .quote-wrapper {
+            text-align: center;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .quote-box {
+            font-size: 13px;
+            color: var(--text-gray);
+            font-style: italic;
+            padding: 18px 24px;
+            border-left: 3px solid var(--primary);
+            background: rgba(37, 99, 235, 0.03);
+            text-align: left;
+            line-height: 1.8;
+            border-radius: 0 8px 8px 0;
+            display: block;
+            max-width: 100%;
+            box-sizing: border-box;
+            white-space: nowrap;
+            letter-spacing: -0.3px;
+        }
+
+        .quote-box .highlight {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Early Access */
+        .early-section {
+            background: linear-gradient(180deg, #f0f7ff 0%, #e8f4ff 50%, #f0f7ff 100%);
+        }
+
+        .early-content {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .early-content h2 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+        }
+
+        .early-content > p {
+            font-size: 14px;
+            color: var(--text-gray);
+            margin-bottom: 28px;
+        }
+
+        .early-content > p .underline {
+            color: var(--primary);
+            text-decoration: underline;
+            font-weight: 500;
+        }
+
+        .signup-form {
+            display: flex;
+            background: white;
+            border-radius: 10px;
+            padding: 6px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border);
+            margin-bottom: 16px;
+        }
+
+        .signup-form .input-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            gap: 10px;
+        }
+
+        .signup-form .input-wrapper svg {
+            width: 18px;
+            height: 18px;
+            color: var(--text-light);
+            flex-shrink: 0;
+        }
+
+        .signup-form input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 14px 0;
+            font-size: 14px;
+            background: transparent;
+            font-family: inherit;
+        }
+
+        .signup-form input::placeholder {
+            color: var(--text-light);
+        }
+
+        .signup-form button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            font-family: inherit;
+        }
+
+        .signup-form button:hover {
+            background: var(--primary-dark);
+        }
+
+        .form-note {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 11px;
+            color: var(--text-light);
+            margin-bottom: 28px;
+        }
+
+        .form-note svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Success Message */
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 28px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.03) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 12px;
+            margin-bottom: 28px;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .success-icon {
+            width: 48px;
+            height: 48px;
+            background: #10b981;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+        }
+
+        .success-icon svg {
+            width: 24px;
+            height: 24px;
+            color: white;
+        }
+
+        .success-message h4 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #065f46;
+            margin-bottom: 6px;
+        }
+
+        .success-message p {
+            font-size: 12px;
+            color: #047857;
+            line-height: 1.6;
+        }
+
+        /* Benefit Card */
+        .voucher-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .voucher-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+        }
+
+        .benefit-text {
+            font-size: 13px;
+            color: var(--text-medium);
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        .benefit-note {
+            font-size: 11px;
+            color: var(--text-light);
+        }
+
+        /* Footer */
+        footer {
+            background: #1e293b;
+            color: white;
+            padding: 48px 40px 35px;
+            text-align: center;
+        }
+
+        .footer-tagline {
+            font-size: 13px;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 24px;
+        }
+
+        .footer-contact {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .footer-email {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .footer-email a {
+            color: #60a5fa;
+            text-decoration: none;
+        }
+
+        .footer-email a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-contact .line-icon {
+            width: 24px;
+            height: 24px;
+            background: var(--line-green);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer-contact .line-icon svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .footer-contact a {
+            color: var(--line-green);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer-logo {
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .footer-description {
+            font-size: 11px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 14px;
+            line-height: 1.6;
+        }
+
+        .footer-copyright {
+            font-size: 10px;
+            color: rgba(255,255,255,0.3);
+            letter-spacing: 0.5px;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 900px) {
+            .value-cards {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .cards-arrow {
+                transform: rotate(90deg);
+            }
+
+            .infra-header {
+                flex-direction: column;
+                gap: 24px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-inner {
+                padding: 0 12px;
+                height: 56px;
+            }
+
+            .logo {
+                font-size: 15px;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .lang-btn {
+                padding: 5px 8px;
+                font-size: 10px;
+            }
+
+            .hero,
+            section {
+                padding: 40px 16px;
+            }
+
+            .hero {
+                padding-top: 65px;
+                min-height: auto;
+            }
+
+            /* Hero Mobile - 텍스트 짤림 방지 */
+            .badge {
+                font-size: 8px;
+                padding: 5px 10px;
+                margin-bottom: 14px;
+                white-space: normal;
+                line-height: 1.4;
+                max-width: 100%;
+                text-align: center;
+            }
+
+            .hero-subtitle {
+                font-size: 11px;
+                margin-bottom: 8px;
+            }
+
+            .hero h1 {
+                font-size: 18px;
+                line-height: 1.5;
+                margin-bottom: 14px;
+                word-break: keep-all;
+                overflow-wrap: break-word;
+            }
+
+            .hero-description {
+                font-size: 11px;
+                margin-bottom: 20px;
+                line-height: 1.7;
+                word-break: keep-all;
+            }
+
+            .hero-cta {
+                padding: 12px 20px;
+                font-size: 12px;
+                white-space: normal;
+                max-width: 100%;
+            }
+
+            .hero-note {
+                font-size: 9px;
+                line-height: 1.5;
+            }
+
+            /* Section titles */
+            .section-label {
+                font-size: 8px;
+                letter-spacing: 1.5px;
+            }
+
+            .section-title,
+            .cocreation-content h2,
+            .infra-header h2,
+            .early-content h2 {
+                font-size: 17px;
+                line-height: 1.5;
+                word-break: keep-all;
+            }
+
+            /* Value Cards */
+            .value-cards {
+                display: flex;
+                flex-direction: column;
+                gap: 14px;
+            }
+
+            .value-card {
+                padding: 16px;
+                width: 100%;
+            }
+
+            .card-label {
+                font-size: 8px;
+            }
+
+            .value-card h3 {
+                font-size: 13px;
+                margin-bottom: 12px;
+            }
+
+            .value-card li {
+                font-size: 11px;
+                margin-bottom: 8px;
+                line-height: 1.5;
+            }
+
+            .bullet-icon {
+                width: 14px;
+                height: 14px;
+            }
+
+            .cards-arrow {
+                align-self: center;
+            }
+
+            .cards-arrow svg {
+                width: 24px;
+                height: 24px;
+            }
+
+            /* Infrastructure */
+            .infra-section {
+                padding: 40px 12px;
+            }
+
+            .infra-header {
+                padding: 0 4px;
+            }
+
+            .infra-header h2 {
+                font-size: 17px;
+                line-height: 1.5;
+            }
+
+            .infra-features li {
+                font-size: 10px;
+                line-height: 1.5;
+            }
+
+            .feature-number {
+                width: 20px;
+                height: 20px;
+                font-size: 9px;
+            }
+
+            .map-container {
+                margin: 0 -12px;
+                width: calc(100% + 24px);
+            }
+
+            /* Co-creation */
+            .cocreation-section {
+                padding: 40px 16px;
+            }
+
+            .cocreation-content {
+                max-width: 100%;
+            }
+
+            .cocreation-content h2 {
+                font-size: 17px;
+                line-height: 1.5;
+            }
+
+            .cocreation-content > p {
+                font-size: 11px;
+                line-height: 1.7;
+            }
+
+            .quote-wrapper {
+                width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            .quote-box {
+                font-size: 10px;
+                padding: 12px 14px;
+                display: block;
+                width: 100%;
+                max-width: 100%;
+                white-space: normal;
+                letter-spacing: 0;
+                word-break: keep-all;
+                overflow-wrap: break-word;
+                box-sizing: border-box;
+                line-height: 1.7;
+            }
+
+            /* Early Access */
+            .early-section {
+                padding: 40px 16px;
+            }
+
+            .early-content h2 {
+                font-size: 17px;
+            }
+
+            .early-content > p {
+                font-size: 11px;
+                line-height: 1.6;
+            }
+
+            .signup-form {
+                flex-direction: column;
+                padding: 6px;
+            }
+
+            .signup-form .input-wrapper {
+                padding: 0 10px;
+            }
+
+            .signup-form input {
+                padding: 10px 0;
+                font-size: 13px;
+            }
+
+            .signup-form button {
+                width: 100%;
+                padding: 12px;
+                justify-content: center;
+                font-size: 12px;
+                white-space: normal;
+            }
+
+            .form-note {
+                font-size: 9px;
+                line-height: 1.5;
+            }
+
+            .voucher-card {
+                padding: 16px;
+            }
+
+            .voucher-badge {
+                font-size: 9px;
+            }
+
+            .benefit-text {
+                font-size: 11px;
+                line-height: 1.7;
+            }
+
+            .benefit-note {
+                font-size: 9px;
+            }
+
+            /* LINE Button */
+            .line-btn {
+                right: 12px;
+                bottom: 12px;
+                top: auto;
+                transform: none;
+                width: 44px;
+                height: 44px;
+            }
+
+            .line-btn:hover {
+                transform: scale(1.05);
+            }
+
+            .line-btn svg {
+                width: 22px;
+                height: 22px;
+            }
+
+            /* Footer */
+            footer {
+                padding: 32px 16px 24px;
+            }
+
+            .footer-tagline {
+                font-size: 10px;
+                line-height: 1.5;
+            }
+
+            .footer-contact {
+                flex-direction: column;
+                gap: 8px;
+                font-size: 10px;
+            }
+
+            .footer-email {
+                flex-direction: column;
+                gap: 4px;
+                font-size: 10px;
+            }
+
+            .footer-logo {
+                font-size: 14px;
+            }
+
+            .footer-description {
+                font-size: 9px;
+                line-height: 1.5;
+            }
+
+            .footer-copyright {
+                font-size: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 16px;
+            }
+
+            .badge {
+                font-size: 7px;
+                padding: 4px 8px;
+            }
+
+            .section-title,
+            .cocreation-content h2,
+            .infra-header h2,
+            .early-content h2 {
+                font-size: 15px;
+            }
+
+            .quote-box {
+                font-size: 9px;
+                padding: 10px 12px;
+            }
+
+            .value-card li {
+                font-size: 10px;
+            }
+
+            .hero-cta {
+                font-size: 11px;
+                padding: 10px 16px;
+            }
+
+            .signup-form button {
+                font-size: 11px;
+            }
+        }
+
+        /* 일본어/중국어 전용 모바일 조정 */
+        @media (max-width: 768px) {
+            .lang-ja .hero h1,
+            .lang-zh .hero h1 {
+                font-size: 16px;
+                letter-spacing: -0.5px;
+                word-break: break-all;
+            }
+
+            .lang-ja .badge,
+            .lang-zh .badge {
+                font-size: 7px;
+                letter-spacing: 0;
+            }
+
+            .lang-ja .hero-subtitle,
+            .lang-zh .hero-subtitle {
+                font-size: 11px;
+            }
+
+            .lang-ja .hero-description,
+            .lang-zh .hero-description {
+                font-size: 10px;
+                word-break: break-all;
+                line-height: 1.8;
+            }
+
+            .lang-ja .hero-cta,
+            .lang-zh .hero-cta {
+                font-size: 11px;
+                letter-spacing: -0.3px;
+                padding: 10px 16px;
+            }
+
+            .lang-ja .signup-form button,
+            .lang-zh .signup-form button {
+                font-size: 11px;
+                letter-spacing: -0.3px;
+            }
+
+            .lang-ja .section-title,
+            .lang-ja .cocreation-content h2,
+            .lang-ja .infra-header h2,
+            .lang-ja .early-content h2,
+            .lang-zh .section-title,
+            .lang-zh .cocreation-content h2,
+            .lang-zh .infra-header h2,
+            .lang-zh .early-content h2 {
+                font-size: 16px;
+                letter-spacing: -0.3px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .lang-ja .hero h1,
+            .lang-zh .hero h1 {
+                font-size: 14px;
+                letter-spacing: -0.5px;
+            }
+
+            .lang-ja .badge,
+            .lang-zh .badge {
+                font-size: 6px;
+            }
+
+            .lang-ja .hero-description,
+            .lang-zh .hero-description {
+                font-size: 9px;
+            }
+
+            .lang-ja .section-title,
+            .lang-ja .cocreation-content h2,
+            .lang-ja .infra-header h2,
+            .lang-ja .early-content h2,
+            .lang-zh .section-title,
+            .lang-zh .cocreation-content h2,
+            .lang-zh .infra-header h2,
+            .lang-zh .early-content h2 {
+                font-size: 14px;
+            }
+        }
     </style>
-<script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
-    "react/": "https://esm.sh/react@^19.2.3/"
-  }
-}
-</script>
 </head>
-<body class="bg-white text-dark">
-
-    <!-- Floating Language Switcher -->
-    <div id="lang-switcher" class="fixed top-24 right-4 md:right-8 z-[1001] flex flex-col gap-2 bg-white/90 backdrop-blur-sm p-1.5 rounded-2xl shadow-xl border border-gray-100">
-        <button onclick="setLanguage('en')" id="btn-en" class="lang-btn active px-3 py-1.5 rounded-xl text-xs font-bold transition-all">EN</button>
-        <button onclick="setLanguage('zh')" id="btn-zh" class="lang-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-gray-500 hover:bg-gray-100">TW</button>
-        <button onclick="setLanguage('ja')" id="btn-ja" class="lang-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-gray-500 hover:bg-gray-100">JP</button>
-    </div>
-
+<body class="lang-ja">
     <!-- Header -->
-    <header id="main-header" class="fixed top-0 w-full bg-white/95 backdrop-blur-md z-[1000] border-b border-gray-100 transition-transform duration-500">
-        <nav class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
-                    <span class="text-white font-black text-xl">L</span>
+    <header>
+        <div class="header-inner">
+            <div class="logo">LOOMPORT</div>
+            <div class="header-right">
+                <div class="lang-switch">
+                    <button class="lang-btn active" data-lang="ja">JP</button>
+                    <button class="lang-btn" data-lang="en">EN</button>
+                    <button class="lang-btn" data-lang="zh">繁體</button>
                 </div>
-                <span class="font-display font-extrabold text-2xl tracking-tighter text-primary">LOOMPORT</span>
+                <nav>
+                    <a href="#early" class="btn-primary" data-i18n="nav.cta">日本パートナー事前登録</a>
+                </nav>
             </div>
-
-            <ul class="hidden lg:flex items-center gap-8 font-semibold text-gray-700">
-                <li><a href="#solution" class="hover:text-accent transition-colors" data-t="nav-solution">Solution</a></li>
-                <li><a href="#features" class="hover:text-accent transition-colors" data-t="nav-features">Features</a></li>
-                <li><a href="#team" class="hover:text-accent transition-colors" data-t="nav-team">Team</a></li>
-                <li><a href="#privacy" class="hover:text-accent transition-colors" data-t="nav-privacy">Privacy</a></li>
-                <li><a href="#contact" class="hover:text-accent transition-colors" data-t="nav-contact">Contact</a></li>
-            </ul>
-
-            <a href="#contact" class="px-6 py-2.5 bg-accent text-white rounded-full text-sm font-bold shadow-lg shadow-accent/20 hover:bg-primary transition-all hover:-translate-y-0.5" data-t="nav-cta">Join Now</a>
-        </nav>
+        </div>
     </header>
 
-    <main>
-        <!-- Hero Section -->
-        <section class="relative pt-32 pb-20 overflow-hidden min-h-[90vh] flex items-center bg-[#020617]">
-            <div class="absolute inset-0 z-0">
-                <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(124,179,66,0.15),transparent_70%)]"></div>
-                <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg">
+            <svg viewBox="0 0 1200 1200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="lineGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.3"/>
+                        <stop offset="100%" stop-color="#93c5fd" stop-opacity="0.1"/>
+                    </linearGradient>
+                    <linearGradient id="lineGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.25"/>
+                        <stop offset="100%" stop-color="#bfdbfe" stop-opacity="0.05"/>
+                    </linearGradient>
+                    <radialGradient id="circleGrad" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.15"/>
+                        <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+                    </radialGradient>
+                </defs>
+                <path d="M-100 600 Q 300 200, 600 400 T 1300 300" stroke="url(#lineGrad1)" stroke-width="1.5" fill="none"/>
+                <path d="M-50 700 Q 350 350, 650 500 T 1250 400" stroke="url(#lineGrad2)" stroke-width="1" fill="none"/>
+                <path d="M0 800 Q 400 500, 700 600 T 1200 500" stroke="url(#lineGrad1)" stroke-width="0.8" fill="none"/>
+                <path d="M200 100 Q 500 300, 800 150 T 1100 250" stroke="url(#lineGrad2)" stroke-width="1" fill="none"/>
+                <circle cx="200" cy="300" r="80" fill="url(#circleGrad)"/>
+                <circle cx="950" cy="250" r="60" fill="url(#circleGrad)"/>
+                <circle cx="1000" cy="800" r="100" fill="url(#circleGrad)"/>
+                <circle cx="600" cy="600" r="180" stroke="#3b82f6" stroke-opacity="0.1" stroke-width="1" fill="none"/>
+                <circle cx="600" cy="600" r="260" stroke="#3b82f6" stroke-opacity="0.08" stroke-width="1" fill="none"/>
+            </svg>
+        </div>
+        
+        <div class="hero-content">
+            <span class="badge" data-i18n="hero.badge">2026年9月 サービスオープン予定｜パートナー事前募集</span>
+            <p class="hero-subtitle" data-i18n="hero.subtitle">韓国ヴィンテージを仕入れたい</p>
+            <h1 data-i18n="hero.title">日本のリセラー・小規模セラー・バイヤーのための<br><span class="highlight" data-i18n="hero.titleHighlight">新しい仕入れインフラ</span></h1>
+            <p class="hero-description" data-i18n="hero.description">韓国現地への訪問なし。オンラインで少量から仕入れ、日本基準で検品される仕組みを現在構築中です。</p>
+            <a href="#early" class="hero-cta" data-i18n="hero.cta">日本パートナー事前登録</a>
+            <p class="hero-note" data-i18n="hero.note">※ サービスは準備段階です。初期参加者の声をもとに設計しています。</p>
+        </div>
+    </section>
+
+    <!-- Value Proposition -->
+    <section class="value-section" id="value">
+        <div class="section-label">VALUE PROPOSITION</div>
+        <h2 class="section-title" data-i18n="value.title">解決される課題と提供価値</h2>
+        
+        <div class="value-cards">
+            <div class="value-card">
+                <div class="card-label" data-i18n="value.oldWay">OLD WAY</div>
+                <h3 data-i18n="value.oldTitle">これまでの課題</h3>
+                <ul>
+                    <li>
+                        <span class="bullet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="12" x2="16" y2="12"></line></svg></span>
+                        <span data-i18n="value.old1">韓国現地への出張・買い付け負担</span>
+                    </li>
+                    <li>
+                        <span class="bullet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="12" x2="16" y2="12"></line></svg></span>
+                        <span data-i18n="value.old2">品質の不確実性とリスク</span>
+                    </li>
+                    <li>
+                        <span class="bullet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="12" x2="16" y2="12"></line></svg></span>
+                        <span data-i18n="value.old3">限定されたスタイル・カテゴリー</span>
+                    </li>
+                    <li>
+                        <span class="bullet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="12" x2="16" y2="12"></line></svg></span>
+                        <span data-i18n="value.old4">最低注文量・物流手配の難しさ</span>
+                    </li>
+                </ul>
             </div>
 
-            <div class="absolute inset-0 z-[1] pointer-events-none">
-                <div class="absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <div class="relative">
-                        <div class="absolute -inset-16 bg-accent/20 blur-[60px] rounded-full animate-pulse"></div>
-                        <div class="w-4 h-4 bg-accent rounded-full relative z-10 shadow-[0_0_30px_rgba(124,179,66,1)] border-2 border-white/20"></div>
-                        <span class="absolute top-10 left-1/2 -translate-x-1/2 whitespace-nowrap text-white font-display font-black tracking-[0.5em] text-sm md:text-lg animate-pulse drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">KOREA</span>
-                        <svg class="absolute top-1/2 left-1/2 w-[1000px] h-[1000px] -translate-x-1/2 -translate-y-1/2 overflow-visible opacity-40">
-                            <path d="M 500 500 Q 350 700 150 850" fill="none" stroke="url(#lineGradient)" stroke-width="2" stroke-dasharray="10 10" class="animate-dash" style="animation-duration: 10s;"></path>
-                            <path d="M 500 500 Q 700 650 900 700" fill="none" stroke="url(#lineGradient)" stroke-width="2" stroke-dasharray="10 10" class="animate-dash" style="animation-duration: 8s;"></path>
-                            <path d="M 500 500 L 500 100" fill="none" stroke="url(#lineGradient)" stroke-width="1" stroke-dasharray="5 5" class="animate-dash" style="animation-duration: 15s;"></path>
+            <div class="cards-arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </div>
+
+            <div class="value-card">
+                <div class="card-label">LOOMPORT WAY</div>
+                <h3 data-i18n="value.newTitle">LOOMPORTの解決策</h3>
+                <ul>
+                    <li>
+                        <span class="bullet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></span>
+                        <span><strong data-i18n="value.new1Bold">オンライン・ワンクリック仕入れ</strong><span data-i18n="value.new1">で時間・コスト削減</span></span>
+                    </li>
+                    <li>
+                        <span class="bullet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></span>
+                        <span><strong data-i18n="value.new2Bold">徹底した品質検品</strong><span data-i18n="value.new2">で安心取引</span></span>
+                    </li>
+                    <li>
+                        <span class="bullet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></span>
+                        <span><strong data-i18n="value.new3Bold">多様な商品群の確保</strong><span data-i18n="value.new3">でビジネス拡大</span></span>
+                    </li>
+                    <li>
+                        <span class="bullet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></span>
+                        <span><strong data-i18n="value.new4Bold">柔軟なオーダーシステム</strong><span data-i18n="value.new4">で少量から可能</span></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Infrastructure -->
+    <section class="infra-section" id="infra">
+        <div class="infra-container">
+            <div class="infra-header">
+                <div>
+                    <div class="section-label">INFRASTRUCTURE</div>
+                    <h2 data-i18n="infra.title">国境を越える、次世代の供給網</h2>
+                </div>
+                <ul class="infra-features">
+                    <li><span class="feature-number">1</span><span data-i18n="infra.feature1">厳格な基準を通過したパートナー供給社</span></li>
+                    <li><span class="feature-number">2</span><span data-i18n="infra.feature2">複数セラー商品の統合・適時配送システム</span></li>
+                    <li><span class="feature-number">3</span><span data-i18n="infra.feature3">柔軟で安定的なオーダープロセス</span></li>
+                </ul>
+            </div>
+            
+            <div class="map-container">
+                <div class="map-visual">
+                    <div class="brush-strokes">
+                        <svg viewBox="0 0 1000 420" preserveAspectRatio="xMidYMid meet" fill="none">
                             <defs>
-                                <linearGradient id="lineGradient" x1="50%" y1="50%" x2="0%" y2="100%">
-                                    <stop offset="0%" stop-color="#7CB342"></stop>
-                                    <stop offset="100%" stop-color="transparent"></stop>
-                                </linearGradient>
+                                <radialGradient id="inkWash1" cx="50%" cy="50%" r="50%" fx="30%" fy="50%">
+                                    <stop offset="0%" stop-color="#c7deff" stop-opacity="0.6"/>
+                                    <stop offset="40%" stop-color="#dbeafe" stop-opacity="0.4"/>
+                                    <stop offset="70%" stop-color="#e8f2ff" stop-opacity="0.2"/>
+                                    <stop offset="100%" stop-color="#f0f7ff" stop-opacity="0"/>
+                                </radialGradient>
+                                <radialGradient id="inkWash2" cx="50%" cy="50%" r="50%" fx="40%" fy="50%">
+                                    <stop offset="0%" stop-color="#bfdbfe" stop-opacity="0.5"/>
+                                    <stop offset="50%" stop-color="#dbeafe" stop-opacity="0.25"/>
+                                    <stop offset="100%" stop-color="#eff6ff" stop-opacity="0"/>
+                                </radialGradient>
+                                <filter id="softInk" x="-50%" y="-50%" width="200%" height="200%">
+                                    <feGaussianBlur in="SourceGraphic" stdDeviation="12"/>
+                                </filter>
+                                <filter id="softInk2" x="-50%" y="-50%" width="200%" height="200%">
+                                    <feGaussianBlur in="SourceGraphic" stdDeviation="18"/>
+                                </filter>
                             </defs>
+                            
+                            <!-- Brush strokes - centered -->
+                            <path d="M100,180 C200,140 350,130 500,145 C650,160 750,140 900,150 L900,200 C750,210 650,200 500,185 C350,170 200,180 100,180Z" fill="url(#inkWash1)" filter="url(#softInk2)"/>
+                            <path d="M80,220 C200,200 380,190 500,200 C620,210 750,195 920,210 L920,260 C750,275 620,265 500,250 C380,235 200,250 80,230Z" fill="url(#inkWash2)" filter="url(#softInk)"/>
+                            
+                            <!-- Korean Supplier lines to Hub (500, 200) -->
+                            <path d="M400,70 Q440,130 485,185" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="2,6" fill="none" opacity="0.6" stroke-linecap="round" class="inflow-line inflow-line-1"/>
+                            <path d="M500,50 Q500,115 500,180" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="2,6" fill="none" opacity="0.6" stroke-linecap="round" class="inflow-line inflow-line-2"/>
+                            <path d="M600,70 Q560,130 515,185" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="2,6" fill="none" opacity="0.6" stroke-linecap="round" class="inflow-line inflow-line-3"/>
+                            <path d="M400,330 Q440,270 485,215" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="2,6" fill="none" opacity="0.6" stroke-linecap="round" class="inflow-line inflow-line-4"/>
+                            <path d="M500,360 Q500,285 500,220" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="2,6" fill="none" opacity="0.6" stroke-linecap="round" class="inflow-line inflow-line-5"/>
+                            <path d="M600,330 Q560,270 515,215" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="2,6" fill="none" opacity="0.6" stroke-linecap="round" class="inflow-line inflow-line-6"/>
+                            
+                            <!-- Korean Supplier dots -->
+                            <circle cx="400" cy="70" r="5" fill="#94a3b8" opacity="0.7"/>
+                            <circle cx="400" cy="70" r="5" fill="#94a3b8" opacity="0.3" class="supplier-pulse supplier-pulse-1"/>
+                            <circle cx="500" cy="50" r="5" fill="#94a3b8" opacity="0.7"/>
+                            <circle cx="500" cy="50" r="5" fill="#94a3b8" opacity="0.3" class="supplier-pulse supplier-pulse-2"/>
+                            <circle cx="600" cy="70" r="5" fill="#94a3b8" opacity="0.7"/>
+                            <circle cx="600" cy="70" r="5" fill="#94a3b8" opacity="0.3" class="supplier-pulse supplier-pulse-3"/>
+                            <circle cx="400" cy="330" r="5" fill="#94a3b8" opacity="0.7"/>
+                            <circle cx="400" cy="330" r="5" fill="#94a3b8" opacity="0.3" class="supplier-pulse supplier-pulse-4"/>
+                            <circle cx="500" cy="360" r="5" fill="#94a3b8" opacity="0.7"/>
+                            <circle cx="500" cy="360" r="5" fill="#94a3b8" opacity="0.3" class="supplier-pulse supplier-pulse-5"/>
+                            <circle cx="600" cy="330" r="5" fill="#94a3b8" opacity="0.7"/>
+                            <circle cx="600" cy="330" r="5" fill="#94a3b8" opacity="0.3" class="supplier-pulse supplier-pulse-6"/>
+                            
+                            <!-- Outflow lines: Hub to Japan (right) -->
+                            <path d="M520,195 Q700,100 880,95" stroke="#3b82f6" stroke-width="1.3" stroke-dasharray="4,10" fill="none" opacity="0.55" stroke-linecap="round" class="flow-line flow-line-1"/>
+                            <path d="M520,200 Q720,230 850,255" stroke="#3b82f6" stroke-width="1.3" stroke-dasharray="4,10" fill="none" opacity="0.45" stroke-linecap="round" class="flow-line flow-line-2"/>
+                            <path d="M520,205 Q650,300 750,350" stroke="#3b82f6" stroke-width="1.3" stroke-dasharray="4,10" fill="none" opacity="0.45" stroke-linecap="round" class="flow-line flow-line-3"/>
+                            
+                            <!-- Outflow lines: Hub to Taiwan/Sydney (left) -->
+                            <path d="M480,195 Q300,120 130,110" stroke="#3b82f6" stroke-width="1.3" stroke-dasharray="4,10" fill="none" opacity="0.45" stroke-linecap="round" class="flow-line flow-line-4"/>
+                            <path d="M480,210 Q280,300 120,330" stroke="#3b82f6" stroke-width="1.3" stroke-dasharray="4,10" fill="none" opacity="0.45" stroke-linecap="round" class="flow-line flow-line-5"/>
+                            
+                            <!-- ===== MAP NODES ===== -->
+                            
+                            <!-- LOOMPORT [KOREA] Hub - Center -->
+                            <g class="node-hub">
+                                <circle cx="500" cy="200" r="12" fill="#111827" class="hub-dot"/>
+                                <circle cx="500" cy="200" r="12" fill="#111827" opacity="0.3" class="hub-pulse"/>
+                                <circle cx="500" cy="200" r="20" fill="none" stroke="#111827" stroke-opacity="0.12" stroke-width="6"/>
+                                <text x="500" y="240" text-anchor="middle" font-size="11" font-weight="800" fill="#111827" font-family="Inter, sans-serif">LOOMPORT [KOREA]</text>
+                            </g>
+                            
+                            <!-- TOKYO - Right Top -->
+                            <g class="node-japan">
+                                <circle cx="880" cy="95" r="9" fill="#3b82f6" class="japan-dot"/>
+                                <circle cx="880" cy="95" r="9" fill="#3b82f6" opacity="0.3" class="japan-pulse japan-pulse-1"/>
+                                <circle cx="880" cy="95" r="15" fill="none" stroke="#3b82f6" stroke-opacity="0.15" stroke-width="4"/>
+                                <text x="880" y="125" text-anchor="middle" font-size="10" font-weight="700" fill="#6b7280" font-family="Inter, sans-serif">TOKYO</text>
+                            </g>
+                            
+                            <!-- OSAKA - Right Middle -->
+                            <g class="node-japan">
+                                <circle cx="850" cy="255" r="9" fill="#3b82f6" class="japan-dot"/>
+                                <circle cx="850" cy="255" r="9" fill="#3b82f6" opacity="0.3" class="japan-pulse japan-pulse-2"/>
+                                <circle cx="850" cy="255" r="15" fill="none" stroke="#3b82f6" stroke-opacity="0.15" stroke-width="4"/>
+                                <text x="850" y="285" text-anchor="middle" font-size="10" font-weight="700" fill="#6b7280" font-family="Inter, sans-serif">OSAKA</text>
+                            </g>
+                            
+                            <!-- FUKUOKA - Right Bottom -->
+                            <g class="node-japan">
+                                <circle cx="750" cy="350" r="9" fill="#3b82f6" class="japan-dot"/>
+                                <circle cx="750" cy="350" r="9" fill="#3b82f6" opacity="0.3" class="japan-pulse japan-pulse-3"/>
+                                <circle cx="750" cy="350" r="15" fill="none" stroke="#3b82f6" stroke-opacity="0.15" stroke-width="4"/>
+                                <text x="750" y="380" text-anchor="middle" font-size="10" font-weight="700" fill="#6b7280" font-family="Inter, sans-serif">FUKUOKA</text>
+                            </g>
+                            
+                            <!-- TAIWAN - Left Top -->
+                            <g class="node-other">
+                                <circle cx="130" cy="110" r="9" fill="#3b82f6" class="other-dot"/>
+                                <circle cx="130" cy="110" r="9" fill="#3b82f6" opacity="0.3" class="japan-pulse japan-pulse-4"/>
+                                <circle cx="130" cy="110" r="15" fill="none" stroke="#3b82f6" stroke-opacity="0.15" stroke-width="4"/>
+                                <text x="130" y="140" text-anchor="middle" font-size="10" font-weight="700" fill="#6b7280" font-family="Inter, sans-serif">TAIWAN</text>
+                            </g>
+                            
+                            <!-- SYDNEY - Left Bottom -->
+                            <g class="node-other">
+                                <circle cx="120" cy="330" r="9" fill="#3b82f6" class="other-dot"/>
+                                <circle cx="120" cy="330" r="9" fill="#3b82f6" opacity="0.3" class="japan-pulse japan-pulse-5"/>
+                                <circle cx="120" cy="330" r="15" fill="none" stroke="#3b82f6" stroke-opacity="0.15" stroke-width="4"/>
+                                <text x="120" y="360" text-anchor="middle" font-size="10" font-weight="700" fill="#6b7280" font-family="Inter, sans-serif">SYDNEY</text>
+                            </g>
                         </svg>
                     </div>
                 </div>
             </div>
-
-            <div class="max-w-7xl mx-auto px-6 relative z-10 grid lg:grid-cols-2 gap-16 items-center w-full">
-                <div class="space-y-10">
-                    <div class="inline-flex items-center gap-3 bg-white/5 backdrop-blur-xl px-4 py-2 rounded-full border border-white/10">
-                        <span class="flex h-2 w-2 rounded-full bg-accent animate-ping"></span>
-                        <span class="text-xs font-bold text-accent-light tracking-widest uppercase" data-t="hero-badge">Connecting East Asia Vintage Markets</span>
-                    </div>
-
-                    <div class="space-y-4">
-                        <h1 class="text-5xl md:text-7xl lg:text-8xl font-display font-extrabold text-white leading-[1.05] tracking-tight">
-                            <span data-t="hero-title-1">Trade Vintage</span><br />
-                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-accent to-lime" data-t="hero-title-2">Smarter & Smaller</span>
-                        </h1>
-                        <p class="text-xl text-gray-400 leading-relaxed max-w-xl font-medium" data-t="hero-subtitle">
-                            From 100kg bulk orders to quality-focused 20-30 pieces. LOOMPORT connects Global buyers with premium Korean vintage sellers—with full logistics support.
-                        </p>
-                    </div>
-
-                    <div class="flex flex-col sm:flex-row gap-5 pt-4">
-                        <a href="#contact" class="px-10 py-5 bg-accent text-white rounded-2xl font-bold text-xl shadow-2xl shadow-accent/40 hover:bg-primary-light transition-all hover:scale-105 text-center active:scale-95" data-t="hero-cta-primary">Start Trading</a>
-                        <a href="#solution" class="px-10 py-5 bg-white/5 backdrop-blur-md border-2 border-white/20 text-white rounded-2xl font-bold text-xl hover:bg-white/10 transition-all text-center" data-t="hero-cta-secondary">Learn More</a>
-                    </div>
-
-                    <div class="flex flex-wrap gap-8 pt-6">
-                        <div class="flex items-center gap-3 group">
-                            <div class="flex-shrink-0 w-8 h-8 bg-accent/20 rounded-xl flex items-center justify-center border border-accent/30">
-                                <svg class="w-4 h-4 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                            </div>
-                            <span class="text-sm font-bold text-gray-300" data-t="hero-feature-1">Small quantity, high quality</span>
-                        </div>
-                        <div class="flex items-center gap-3 group">
-                            <div class="flex-shrink-0 w-8 h-8 bg-accent/20 rounded-xl flex items-center justify-center border border-accent/30">
-                                <svg class="w-4 h-4 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                            </div>
-                            <span class="text-sm font-bold text-gray-300" data-t="hero-feature-2">Full logistics handled</span>
-                        </div>
-                        <div class="flex items-center gap-3 group">
-                            <div class="flex-shrink-0 w-8 h-8 bg-accent/20 rounded-xl flex items-center justify-center border border-accent/30">
-                                <svg class="w-4 h-4 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                            </div>
-                            <span class="text-sm font-bold text-gray-300" data-t="hero-feature-3">Verified Korean sellers</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Stats Visual -->
-                <div class="relative hidden lg:block">
-                    <div class="bg-white/5 backdrop-blur-2xl rounded-[48px] p-12 shadow-[0_0_50px_rgba(0,0,0,0.6)] border border-white/10 relative z-20 overflow-hidden group">
-                        <div class="grid grid-cols-2 gap-10 relative z-10">
-                            <div class="text-center p-8 bg-white/[0.03] border border-white/5 rounded-[32px] transition-all duration-500 hover:bg-white/10 hover:-translate-y-2">
-                                <div class="text-4xl lg:text-5xl font-display font-extrabold text-accent mb-2">4+</div>
-                                <div class="text-[10px] lg:text-xs font-bold text-gray-400 uppercase tracking-[0.2em]" data-t="stat-years">Years Experience</div>
-                            </div>
-                            <div class="text-center p-8 bg-white/[0.03] border border-white/5 rounded-[32px] transition-all duration-500 hover:bg-white/10 hover:-translate-y-2">
-                                <div class="text-4xl lg:text-5xl font-display font-extrabold text-accent mb-2">200M+</div>
-                                <div class="text-[10px] lg:text-xs font-bold text-gray-400 uppercase tracking-[0.2em]" data-t="stat-volume">KRW Traded</div>
-                            </div>
-                            <div class="text-center p-8 bg-white/[0.03] border border-white/5 rounded-[32px] transition-all duration-500 hover:bg-white/10 hover:-translate-y-2">
-                                <div class="text-4xl lg:text-5xl font-display font-extrabold text-accent mb-2">20-30</div>
-                                <div class="text-[10px] lg:text-xs font-bold text-gray-400 uppercase tracking-[0.2em]" data-t="stat-quantity">Pieces Minimum</div>
-                            </div>
-                            <div class="text-center p-8 bg-white/[0.03] border border-white/5 rounded-[32px] transition-all duration-500 hover:bg-white/10 hover:-translate-y-2">
-                                <div class="text-4xl lg:text-5xl font-display font-extrabold text-accent mb-2">100%</div>
-                                <div class="text-[10px] lg:text-xs font-bold text-gray-400 uppercase tracking-[0.2em]" data-t="stat-inspection">Quality Checked</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Solution Section -->
-        <section id="solution" class="py-24 bg-white">
-            <div class="max-w-7xl mx-auto px-6">
-                <div class="text-center max-w-3xl mx-auto mb-16">
-                    <span class="px-4 py-1.5 bg-accent/10 text-accent text-xs font-bold uppercase tracking-widest rounded-full mb-4 inline-block" data-t="problem-tag">Why LOOMPORT</span>
-                    <h2 class="text-4xl md:text-5xl font-display font-extrabold text-primary mb-6" data-t="problem-title">From Bulk Headaches to Smart Trading</h2>
-                    <p class="text-gray-500 text-lg" data-t="problem-subtitle">Traditional vintage wholesale forces you into risky 100-200kg bulk purchases. LOOMPORT changes everything.</p>
-                </div>
-
-                <div class="grid md:grid-cols-2 gap-8">
-                    <div class="group bg-red-50/50 rounded-[32px] p-8 md:p-12 border-2 border-red-100 hover:border-red-200 transition-all">
-                        <div class="w-16 h-16 bg-red-500 rounded-2xl flex items-center justify-center text-3xl mb-8 shadow-lg shadow-red-200">😰</div>
-                        <h3 class="text-2xl font-display font-bold text-red-900 mb-6" data-t="problem-card-title">Traditional Wholesale</h3>
-                        <ul class="space-y-4">
-                            <li class="flex items-start gap-3"><span class="text-red-500 font-bold text-lg leading-none mt-1">✕</span><span class="text-red-800/80 font-medium" data-t="problem-1">Must buy 100-200kg minimum</span></li>
-                            <li class="flex items-start gap-3"><span class="text-red-500 font-bold text-lg leading-none mt-1">✕</span><span class="text-red-800/80 font-medium" data-t="problem-2">Unknown quality until arrival</span></li>
-                            <li class="flex items-start gap-3"><span class="text-red-500 font-bold text-lg leading-none mt-1">✕</span><span class="text-red-800/80 font-medium" data-t="problem-3">Complex customs & logistics</span></li>
-                            <li class="flex items-start gap-3"><span class="text-red-500 font-bold text-lg leading-none mt-1">✕</span><span class="text-red-800/80 font-medium" data-t="problem-4">High upfront capital required</span></li>
-                            <li class="flex items-start gap-3"><span class="text-red-500 font-bold text-lg leading-none mt-1">✕</span><span class="text-red-800/80 font-medium" data-t="problem-5">Limited seller options</span></li>
-                        </ul>
-                    </div>
-                    <div class="group bg-accent-light/10 rounded-[32px] p-8 md:p-12 border-2 border-accent/20 hover:border-accent transition-all">
-                        <div class="w-16 h-16 bg-accent rounded-2xl flex items-center justify-center text-3xl mb-8 shadow-lg shadow-accent/20">✨</div>
-                        <h3 class="text-2xl font-display font-bold text-primary mb-6" data-t="solution-card-title">LOOMPORT Solution</h3>
-                        <ul class="space-y-4">
-                            <li class="flex items-start gap-3"><span class="text-accent font-bold text-lg leading-none mt-1">✓</span><span class="text-primary font-medium" data-t="solution-1">Start with just 20-30 pieces</span></li>
-                            <li class="flex items-start gap-3"><span class="text-accent font-bold text-lg leading-none mt-1">✓</span><span class="text-primary font-medium" data-t="solution-2">Every item quality inspected</span></li>
-                            <li class="flex items-start gap-3"><span class="text-accent font-bold text-lg leading-none mt-1">✓</span><span class="text-primary font-medium" data-t="solution-3">Full logistics & customs handled</span></li>
-                            <li class="flex items-start gap-3"><span class="text-accent font-bold text-lg leading-none mt-1">✓</span><span class="text-primary font-medium" data-t="solution-4">Lower risk, flexible ordering</span></li>
-                            <li class="flex items-start gap-3"><span class="text-accent font-bold text-lg leading-none mt-1">✓</span><span class="text-primary font-medium" data-t="solution-5">Access multiple Korean sellers</span></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Features Section -->
-        <section id="features" class="py-24 bg-gray-50">
-            <div class="max-w-7xl mx-auto px-6">
-                <div class="text-center max-w-3xl mx-auto mb-16">
-                    <span class="px-4 py-1.5 bg-primary/5 text-primary text-xs font-bold uppercase tracking-widest rounded-full mb-4 inline-block" data-t="features-tag">Core Features</span>
-                    <h2 class="text-4xl md:text-5xl font-display font-extrabold text-primary mb-6" data-t="features-title">Everything You Need to Trade with Confidence</h2>
-                    <p class="text-gray-500 text-lg" data-t="features-subtitle">We handle the complexity so you can focus on growing your vintage business.</p>
-                </div>
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Feature Cards -->
-                    <div class="bg-white p-10 rounded-[32px] shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all border border-gray-100">
-                        <div class="w-16 h-16 bg-gradient-to-br from-accent to-primary-light rounded-2xl flex items-center justify-center text-3xl mb-8 shadow-lg shadow-accent/20">📦</div>
-                        <h3 class="text-xl font-display font-bold text-primary mb-4" data-t="feature-1-title">Small Quantity Orders</h3>
-                        <p class="text-gray-500 leading-relaxed text-sm" data-t="feature-1-desc">Order as few as 20-30 pieces instead of 100kg+ bulk. Test products, reduce risk, and manage inventory efficiently.</p>
-                    </div>
-                    <div class="bg-white p-10 rounded-[32px] shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all border border-gray-100">
-                        <div class="w-16 h-16 bg-gradient-to-br from-accent to-primary-light rounded-2xl flex items-center justify-center text-3xl mb-8 shadow-lg shadow-accent/20">✅</div>
-                        <h3 class="text-xl font-display font-bold text-primary mb-4" data-t="feature-2-title">Quality Inspection</h3>
-                        <p class="text-gray-500 leading-relaxed text-sm" data-t="feature-2-desc">Every item is personally inspected before shipping. No surprises, no disappointments—only quality vintage pieces.</p>
-                    </div>
-                    <div class="bg-white p-10 rounded-[32px] shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all border border-gray-100">
-                        <div class="w-16 h-16 bg-gradient-to-br from-accent to-primary-light rounded-2xl flex items-center justify-center text-3xl mb-8 shadow-lg shadow-accent/20">🚚</div>
-                        <h3 class="text-xl font-display font-bold text-primary mb-4" data-t="feature-3-title">Full Logistics Support</h3>
-                        <p class="text-gray-500 leading-relaxed text-sm" data-t="feature-3-desc">We handle shipping, customs clearance, and delivery. From Seoul to your warehouse—completely hassle-free.</p>
-                    </div>
-                    <div class="bg-white p-10 rounded-[32px] shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all border border-gray-100">
-                        <div class="w-16 h-16 bg-gradient-to-br from-accent to-primary-light rounded-2xl flex items-center justify-center text-3xl mb-8 shadow-lg shadow-accent/20">🌏</div>
-                        <h3 class="text-xl font-display font-bold text-primary mb-4" data-t="feature-4-title">Multiple Sellers, One Platform</h3>
-                        <p class="text-gray-500 leading-relaxed text-sm" data-t="feature-4-desc">Connect with verified Korean vintage sellers in one place. Compare styles, prices, and inventory with a click.</p>
-                    </div>
-                    <div class="bg-white p-10 rounded-[32px] shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all border border-gray-100">
-                        <div class="w-16 h-16 bg-gradient-to-br from-accent to-primary-light rounded-2xl flex items-center justify-center text-3xl mb-8 shadow-lg shadow-accent/20">💳</div>
-                        <h3 class="text-xl font-display font-bold text-primary mb-4" data-t="feature-5-title">Secure Payments</h3>
-                        <p class="text-gray-500 leading-relaxed text-sm" data-t="feature-5-desc">Protected transactions with escrow service. Your payment is safe until you confirm delivery satisfaction.</p>
-                    </div>
-                    <div class="bg-white p-10 rounded-[32px] shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all border border-gray-100">
-                        <div class="w-16 h-16 bg-gradient-to-br from-accent to-primary-light rounded-2xl flex items-center justify-center text-3xl mb-8 shadow-lg shadow-accent/20">📊</div>
-                        <h3 class="text-xl font-display font-bold text-primary mb-4" data-t="feature-6-title">Market Insights</h3>
-                        <p class="text-gray-500 leading-relaxed text-sm" data-t="feature-6-desc">Access real-time data on trending styles, pricing, and demand across Global and East Asia markets.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Team Section -->
-        <section id="team" class="py-24 bg-white">
-            <div class="max-w-7xl mx-auto px-6">
-                <div class="text-center max-w-3xl mx-auto mb-16">
-                    <span class="px-4 py-1.5 bg-accent/5 text-accent text-xs font-bold uppercase tracking-widest rounded-full mb-4 inline-block" data-t="team-tag">Our Team</span>
-                    <h2 class="text-4xl md:text-5xl font-display font-extrabold text-primary mb-6" data-t="team-title">Built by Vintage Traders, For Vintage Traders</h2>
-                    <p class="text-gray-500 text-lg" data-t="team-subtitle">We've spent 4+ years in the vintage clothing business, experiencing every challenge firsthand. Now we're building the platform we always wished existed.</p>
-                </div>
-                <div class="grid md:grid-cols-3 gap-8 text-center">
-                    <div class="bg-gray-50 p-10 rounded-[40px] hover:bg-white transition-all shadow-sm border border-transparent hover:border-accent/20">
-                        <div class="w-24 h-24 bg-accent/10 rounded-full flex items-center justify-center text-4xl mx-auto mb-6">🎯</div>
-                        <h3 class="text-xl font-display font-bold text-primary mb-1" data-t="team-1-name">Operations Team</h3>
-                        <p class="text-accent font-bold text-xs uppercase tracking-widest mb-4" data-t="team-1-role">Quality & Logistics</p>
-                        <p class="text-gray-500 text-sm" data-t="team-1-bio">Expert inspectors and logistics coordinators ensuring every shipment meets our quality standards.</p>
-                    </div>
-                    <div class="bg-gray-50 p-10 rounded-[40px] hover:bg-white transition-all shadow-sm border border-transparent hover:border-accent/20">
-                        <div class="w-24 h-24 bg-accent/10 rounded-full flex items-center justify-center text-4xl mx-auto mb-6">🤝</div>
-                        <h3 class="text-xl font-display font-bold text-primary mb-1" data-t="team-2-name">Partnership Team</h3>
-                        <p class="text-accent font-bold text-xs uppercase tracking-widest mb-4" data-t="team-2-role">Seller Relations</p>
-                        <p class="text-gray-500 text-sm" data-t="team-2-bio">Building relationships with premium vintage sellers across Korea to bring you the best selection.</p>
-                    </div>
-                    <div class="bg-gray-50 p-10 rounded-[40px] hover:bg-white transition-all shadow-sm border border-transparent hover:border-accent/20">
-                        <div class="w-24 h-24 bg-accent/10 rounded-full flex items-center justify-center text-4xl mx-auto mb-6">💡</div>
-                        <h3 class="text-xl font-display font-bold text-primary mb-1" data-t="team-3-name">Customer Success</h3>
-                        <p class="text-accent font-bold text-xs uppercase tracking-widest mb-4" data-t="team-3-role">Your Growth Partners</p>
-                        <p class="text-gray-500 text-sm" data-t="team-3-bio">Dedicated support team helping you navigate the platform and optimize your vintage business.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section id="contact" class="py-24 bg-primary relative overflow-hidden">
-            <div class="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-white/5 rounded-full blur-[100px]"></div>
-            <div class="max-w-7xl mx-auto px-6 relative z-10">
-                <div class="grid lg:grid-cols-2 gap-16 items-center">
-                    <div class="text-white space-y-6">
-                        <h2 class="text-4xl md:text-5xl font-display font-extrabold" data-t="cta-title">Ready to Transform Your Vintage Business?</h2>
-                        <p class="text-xl text-white/70" data-t="cta-subtitle">Join the waitlist and be among the first to access LOOMPORT when we launch. No commitment required.</p>
-                    </div>
-                    <div class="bg-white rounded-[40px] p-8 md:p-12 shadow-2xl">
-                        <form id="contact-form" class="space-y-6">
-                            <div class="grid md:grid-cols-2 gap-6">
-                                <input type="text" id="form-shop" required class="w-full px-5 py-3 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-accent outline-none" placeholder="Shop Name">
-                                <input type="text" id="form-id" required class="w-full px-5 py-3 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-accent outline-none" placeholder="Line ID">
-                            </div>
-                            <input type="text" id="form-country" required class="w-full px-5 py-3 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-accent outline-none" placeholder="Country">
-                            <select id="form-category" required class="w-full px-5 py-3 rounded-2xl bg-gray-50 border-2 border-transparent focus:border-accent outline-none appearance-none">
-                                <option value="" data-t="form-select">Select Category...</option>
-                                <option value="men" data-t="form-cat-men">Men's Clothing</option>
-                                <option value="women" data-t="form-cat-women">Women's Clothing</option>
-                                <option value="kids" data-t="form-cat-kids">Children's Clothing</option>
-                                <option value="other" data-t="form-cat-other">Other</option>
-                            </select>
-                            <button type="submit" id="submit-btn" class="w-full py-5 bg-accent text-white rounded-2xl font-bold text-xl shadow-lg hover:bg-primary-light transition-all" data-t="form-submit">Join Waitlist</button>
-                            <p id="success-msg" class="hidden text-accent font-bold text-center mt-4" data-t="form-success">Thank you! We'll contact you soon.</p>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Privacy Section -->
-        <section id="privacy" class="py-24 bg-gray-50/50">
-            <div class="max-w-7xl mx-auto px-6">
-                <div class="grid lg:grid-cols-3 gap-16">
-                    <div class="lg:col-span-1">
-                        <span class="px-4 py-1.5 bg-accent/10 text-accent text-xs font-bold uppercase tracking-widest rounded-full mb-4 inline-block" data-t="privacy-tag">Data Protection</span>
-                        <h2 class="text-4xl font-display font-extrabold text-primary mb-6" data-t="privacy-title">Privacy Policy</h2>
-                        <p class="text-gray-500 text-lg leading-relaxed" data-t="privacy-subtitle">Loomport values your business privacy. Here is a clear summary of how we handle your information.</p>
-                    </div>
-                    <div class="lg:col-span-2 grid md:grid-cols-2 gap-8">
-                        <div class="p-8 bg-white rounded-[32px] shadow-sm border border-gray-100">
-                            <div class="w-10 h-10 rounded-full bg-accent/5 flex items-center justify-center mb-6"><span class="text-accent font-bold text-lg">1</span></div>
-                            <h3 class="font-bold text-primary mb-3 text-xl font-display" data-t="privacy-section-1-title">Data Collection</h3>
-                            <p class="text-gray-500 text-sm leading-relaxed" data-t="privacy-section-1-desc">Loomport collects limited personal information such as email addresses and social media IDs submitted through our lead forms.</p>
-                        </div>
-                        <div class="p-8 bg-white rounded-[32px] shadow-sm border border-gray-100">
-                            <div class="w-10 h-10 rounded-full bg-accent/5 flex items-center justify-center mb-6"><span class="text-accent font-bold text-lg">2</span></div>
-                            <h3 class="font-bold text-primary mb-3 text-xl font-display" data-t="privacy-section-2-title">Purpose & Usage</h3>
-                            <p class="text-gray-500 text-sm leading-relaxed" data-t="privacy-section-2-desc">This information is used solely for the purpose of contacting you regarding curated vintage sourcing services from Korea. We do not sell, rent, or share your information with third parties.</p>
-                        </div>
-                        <div class="p-8 bg-white rounded-[32px] shadow-sm border border-gray-100">
-                            <div class="w-10 h-10 rounded-full bg-accent/5 flex items-center justify-center mb-6"><span class="text-accent font-bold text-lg">3</span></div>
-                            <h3 class="font-bold text-primary mb-3 text-xl font-display" data-t="privacy-section-3-title">Secure Storage</h3>
-                            <p class="text-gray-500 text-sm leading-relaxed" data-t="privacy-section-3-desc">Your information will be stored securely and used only for business communication related to Loomport.</p>
-                        </div>
-                        <div class="p-8 bg-primary/5 rounded-[32px] border border-primary/10 flex items-center justify-center text-center">
-                            <div>
-                                <p class="text-primary font-bold text-sm mb-2" data-t="privacy-contact-label">If you have any questions, please contact us at</p>
-                                <a href="mailto:filmoground@gmail.com" class="text-accent font-bold hover:underline text-lg">filmoground@gmail.com</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="bg-dark text-gray-500 py-12">
-        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-            <span class="font-display font-extrabold text-xl text-white">LOOMPORT</span>
-            <span class="text-xs uppercase tracking-widest" data-t="footer-copyright">© 2026 LOOMPORT. All rights reserved.</span>
-            <a href="mailto:filmoground@gmail.com" class="text-white hover:text-accent transition-colors font-bold">filmoground@gmail.com</a>
         </div>
+    </section>
+
+    <!-- Co-creation -->
+    <section class="cocreation-section" id="philosophy">
+        <div class="cocreation-content">
+            <div class="section-label">CO-CREATION</div>
+            <h2 data-i18n="cocreation.title">あなたが探すスタイルが、私たちの供給基準です</h2>
+            <p data-i18n="cocreation.description">LOOMPORTは単なるオープンマーケットではありません。私たちは、パートナー企業と共に成長し、市場を創ります。</p>
+            
+            <div class="quote-wrapper">
+                <div class="quote-box">
+                    <span data-i18n="cocreation.quote">"提案された特定のスタイル、カテゴリー、韓国ブランドを</span><span class="highlight" data-i18n="cocreation.quoteHighlight">優先的に開拓</span><span data-i18n="cocreation.quoteEnd">し、あなた専用のインフラを構築します。"</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Early Access -->
+    <section class="early-section" id="early">
+        <div class="early-content">
+            <div class="section-label">EARLY PARTNER ACCESS</div>
+            <h2 data-i18n="early.title">誰よりも早く、始めてください</h2>
+            <p><span data-i18n="early.description">LOOMPORTのファウンディング・パートナーとして、</span><span class="underline" data-i18n="early.descriptionHighlight">最優先で利用権</span><span data-i18n="early.descriptionEnd">を。</span></p>
+            
+            <form class="signup-form" id="partner-form">
+                <div class="input-wrapper">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    <input type="email" id="email-input" data-i18n-placeholder="early.placeholder" placeholder="メールアドレスを入力" required>
+                </div>
+                <button type="submit" data-i18n="early.submit">日本パートナー事前登録 →</button>
+            </form>
+            
+            <div class="success-message" id="success-message">
+                <div class="success-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                </div>
+                <h4 data-i18n="early.successTitle">ご登録いただき、誠にありがとうございます</h4>
+                <p data-i18n="early.successMessage">順次、メールにてご連絡させていただきます。</p>
+            </div>
+            
+            <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+            
+            <div class="form-note">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                <span data-i18n="early.formNote">登録後、詳細資料と特典のご案内を即座に送付いたします。</span>
+            </div>
+            
+            <div class="voucher-card">
+                <span class="voucher-badge" data-i18n="early.benefitTitle">初期パートナー特典について</span>
+                <p class="benefit-text" data-i18n="early.benefitText">LOOMPORTでは、サービス正式ローンチ後、事前登録いただいた日本パートナーの皆様に向けて初回取引時のコスト負担を軽減する特典を予定しています。</p>
+                <p class="benefit-note" data-i18n="early.benefitNote">※ 特典内容は、サービス設計とともに決定予定です。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <p class="footer-tagline" data-i18n="footer.tagline">ソーシングは選択ではなく、基準であるべきです</p>
+        <div class="footer-contact">
+            <div class="footer-email">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" width="18" height="18">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                <span>Contact E-mail : </span>
+                <a href="/cdn-cgi/l/email-protection#04626d68696b63766b716a60446369656d682a676b69"><span class="__cf_email__" data-cfemail="583e313435373f2a372d363c183f35393134763b3735">[email&#160;protected]</span></a>
+            </div>
+        </div>
+        <div class="footer-logo">LOOMPORT BY FILMOGROUND</div>
+        <p class="footer-description">LOOMPORT operates from Korea,<br>working closely with verified sellers nationwide.</p>
+        <p class="footer-copyright">© 2026 LOOMPORT. ALL RIGHTS RESERVED.</p>
     </footer>
 
-    <script>
-      const translations = {
-        en: {
-          'nav-solution': 'Solution', 'nav-features': 'Features', 'nav-team': 'Team', 'nav-privacy': 'Privacy', 'nav-contact': 'Contact', 'nav-cta': 'Join Now',
-          'hero-badge': 'Connecting East Asia Vintage Markets', 'hero-title-1': 'Trade Vintage', 'hero-title-2': 'Smarter & Smaller', 'hero-subtitle': 'From 100kg bulk orders to quality-focused 20-30 pieces. LOOMPORT connects Global buyers with premium Korean vintage sellers.',
-          'hero-cta-primary': 'Start Trading', 'hero-cta-secondary': 'Learn More',
-          'hero-feature-1': 'Small quantity, high quality', 'hero-feature-2': 'Full logistics handled', 'hero-feature-3': 'Verified Korean sellers',
-          'stat-years': 'Years Experience', 'stat-volume': 'KRW Traded', 'stat-quantity': 'Pieces Minimum', 'stat-inspection': 'Quality Checked',
-          'problem-tag': 'Why LOOMPORT', 'problem-title': 'From Bulk Headaches to Smart Trading', 'problem-subtitle': 'Traditional vintage wholesale forces you into risky purchases. LOOMPORT changes everything.',
-          'problem-card-title': 'Traditional Wholesale', 'problem-1': 'Must buy 100-200kg minimum', 'problem-2': 'Unknown quality until arrival', 'problem-3': 'Complex customs & logistics', 'problem-4': 'High upfront capital', 'problem-5': 'Limited seller options',
-          'solution-card-title': 'LOOMPORT Solution', 'solution-1': 'Start with 20-30 pieces', 'solution-2': 'Every item quality checked', 'solution-3': 'Full logistics handled', 'solution-4': 'Lower risk, flexible ordering', 'solution-5': 'Access multiple sellers',
-          'features-tag': 'Core Features', 'features-title': 'Confident Trading', 'features-subtitle': 'We handle complexity.',
-          'feature-1-title': 'Small Orders', 'feature-1-desc': '20-30 pieces minimum.',
-          'feature-2-title': 'Inspection', 'feature-2-desc': 'Manual quality check.',
-          'feature-3-title': 'Logistics', 'feature-3-desc': 'Door-to-door delivery.',
-          'feature-4-title': 'Selection', 'feature-4-desc': 'Multiple verified sellers.',
-          'feature-5-title': 'Payments', 'feature-5-desc': 'Secure escrow service.',
-          'feature-6-title': 'Insights', 'feature-6-desc': 'Market data and trends.',
-          'team-tag': 'Our Team', 'team-title': 'By Traders, For Traders', 'team-subtitle': '4+ years in vintage clothing industry.',
-          'team-1-name': 'Ops Team', 'team-1-role': 'Logistics', 'team-1-bio': 'Quality assurance.',
-          'team-2-name': 'Partnerships', 'team-2-role': 'Sellers', 'team-2-bio': 'Seller network.',
-          'team-3-name': 'Success', 'team-3-role': 'Support', 'team-3-bio': 'Growth partners.',
-          'cta-title': 'Transform Your Business', 'cta-subtitle': 'Join the waitlist.',
-          'form-select': 'Select...', 'form-cat-men': "Men", 'form-cat-women': "Women", 'form-cat-kids': "Kids", 'form-cat-other': 'Other',
-          'form-submit': 'Join Waitlist', 'form-success': "Thank you!",
-          'privacy-tag': 'Data Protection', 'privacy-title': 'Privacy Policy', 'privacy-subtitle': 'Loomport values your business privacy. Here is a clear summary of how we handle your information.',
-          'privacy-section-1-title': 'Data Collection', 'privacy-section-1-desc': 'Loomport collects limited personal information such as email addresses and social media IDs submitted through our lead forms.',
-          'privacy-section-2-title': 'Purpose & Usage', 'privacy-section-2-desc': 'This information is used solely for the purpose of contacting you regarding curated vintage sourcing services from Korea. We do not sell, rent, or share your information with third parties.',
-          'privacy-section-3-title': 'Secure Storage', 'privacy-section-3-desc': 'Your information will be stored securely and used only for business communication related to Loomport.',
-          'privacy-contact-label': 'If you have any questions, please contact us at',
-          'footer-copyright': '© 2026 LOOMPORT. All rights reserved.'
-        },
-        zh: {
-          'nav-solution': '解決方案', 'nav-features': '特點', 'nav-team': '團隊', 'nav-privacy': '隱私', 'nav-contact': '聯絡', 'nav-cta': '立即加入',
-          'hero-badge': '連結東亞古著市場', 'hero-title-1': '更聰明的', 'hero-title-2': '小批量交易', 'hero-subtitle': '從100公斤大批量到精選20-30件。LOOMPORT連結全球買家與優質韓國古著賣家。',
-          'hero-cta-primary': '開始交易', 'hero-cta-secondary': '了解更多',
-          'hero-feature-1': '小批量高品質', 'hero-feature-2': '完整物流', 'hero-feature-3': '認證韓國賣家',
-          'problem-tag': '為什麼選擇LOOMPORT', 'problem-title': '從大批量困擾到聰明交易', 'problem-subtitle': '傳統古著批發被迫承擔風險。LOOMPORT改變一切。',
-          'problem-card-title': '傳統批發', 'problem-1': '必須採購100-200公斤起', 'problem-2': '到貨前品質未知', 'problem-3': '複雜的報關', 'problem-4': '需要高額預付資金', 'problem-5': '賣家選擇有限',
-          'solution-card-title': 'LOOMPORT解決方案', 'solution-1': '20-30件起訂', 'solution-2': '每件品質檢驗', 'solution-3': '完整物流代辦', 'solution-4': '低風險彈性訂購', 'solution-5': '接觸多家賣家',
-          'cta-title': '轉型您的古著事業', 'cta-subtitle': '加入候補名單。',
-          'form-select': '請選擇...', 'form-cat-men': "男裝", 'form-cat-women': "女裝", 'form-cat-kids': "童裝", 'form-cat-other': '其他',
-          'form-submit': '加入候補名單', 'form-success': '感謝您！',
-          'privacy-tag': '數據保護', 'privacy-title': '隱私政策', 'privacy-subtitle': 'Loomport 重視您的業務隱私。以下是我們處理您資訊的方式摘要。',
-          'privacy-section-1-title': '數據收集', 'privacy-section-1-desc': 'Loomport 收集透過我們的潛在客戶表單提交的有限個人資訊，例如電子郵件地址和社交媒體 ID。',
-          'privacy-section-2-title': '目的與用途', 'privacy-section-2-desc': '此資訊僅用於就韓國精選古著採購服務與您聯繫。我們不會向第三方出售、出租或分享您的資訊。',
-          'privacy-section-3-title': '安全儲存', 'privacy-section-3-desc': '您的資訊將被安全儲存，且僅用於與 Loomport 相關的業務溝通。',
-          'privacy-contact-label': '如果您有任何疑問，請透過以下電子郵件與我們聯繫',
-          'footer-copyright': '© 2026 LOOMPORT. 版權所有。'
-        },
-        ja: {
-          'nav-solution': '解決策', 'nav-features': '特徴', 'nav-team': 'チーム', 'nav-privacy': 'プライバシー', 'nav-contact': '連絡先', 'nav-cta': '今すぐ参加',
-          'hero-badge': '東アジアヴィンテージ市場を繋ぐ', 'hero-title-1': 'スマートな', 'hero-title-2': '小ロット取引', 'hero-subtitle': '100kgから厳選20-30点へ。LOOMPORTは世界中のバイヤーと韓国の優良セラーを繋ぎます。',
-          'hero-cta-primary': '取引開始', 'hero-cta-secondary': '詳細',
-          'hero-feature-1': '小ロット・高品質', 'hero-feature-2': '物流サポート', 'hero-feature-3': '認証済み韓国セラー',
-          'problem-tag': 'LOOMPORTの理由', 'problem-title': '大量仕入れの悩みから解放', 'problem-subtitle': '従来の卸売はリスクが高いです。LOOMPORTが変えます。',
-          'problem-card-title': '従来の卸売', 'problem-1': '最低100-200kg必須', 'problem-2': '品質が不明', 'problem-3': '複雑な通関', 'problem-4': '高額な初期費用', 'problem-5': 'セラーが限定的',
-          'solution-card-title': 'LOOMPORTの解決策', 'solution-1': '20-30点から開始', 'solution-2': '全数品質検査', 'solution-3': '通関・配送代行', 'solution-4': '低リスク・柔軟な発注', 'solution-5': '複数セラーにアクセス',
-          'cta-title': 'ビジネスを変革しましょう', 'cta-subtitle': 'ウェイティングリストに参加。',
-          'form-select': '選択してください...', 'form-cat-men': "紳士服", 'form-cat-women': "婦人服", 'form-cat-kids': "子供服", 'form-cat-other': 'その他',
-          'form-submit': 'リストに参加', 'form-success': 'ありがとうございます！',
-          'privacy-tag': 'データ保護', 'privacy-title': 'プライバシーポリシー', 'privacy-subtitle': 'Loomport はお客様のビジネス上のプライバシーを尊重します。情報の取り扱いに関する概要は以下の通りです。',
-          'privacy-section-1-title': 'データの収集', 'privacy-section-1-desc': 'Loomport は、リードフォームを通じて送信されたメールアドレスや SNS ID などの限定的な個人情報を収集します。',
-          'privacy-section-2-title': '目的と利用', 'privacy-section-2-desc': 'この情報は、韓国からの厳選されたヴィンテージのソーシングサービスに関する連絡のみに使用されます。お客様の情報を第三者に販売、レンタル、または共有することはありません。',
-          'privacy-section-3-title': '安全な保管', 'privacy-section-3-desc': 'お客様の情報は安全に保管され、Loomport に関連する業務上の連絡のみに使用されます。',
-          'privacy-contact-label': 'ご不明な点がございましたら、こちらまでお問い合わせください',
-          'footer-copyright': '© 2026 LOOMPORT. All rights reserved.'
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // Translation data
+        const translations = {
+            ja: {
+                'nav.cta': '日本パートナー事前登録',
+                'hero.badge': '2026年9月 サービスオープン予定｜パートナー事前募集',
+                'hero.subtitle': '韓国ヴィンテージを仕入れたい',
+                'hero.title': '日本のリセラー・小規模セラー・バイヤーのための<br><span class="highlight">新しい仕入れインフラ</span>',
+                'hero.description': '韓国現地への訪問なし。オンラインで少量から仕入れ、日本基準で検品される仕組みを現在構築中です。',
+                'hero.cta': '日本パートナー事前登録',
+                'hero.note': '※ サービスは準備段階です。初期参加者の声をもとに設計しています。',
+                'value.title': '解決される課題と提供価値',
+                'value.oldWay': 'OLD WAY',
+                'value.oldTitle': 'これまでの課題',
+                'value.old1': '韓国現地への出張・買い付け負担',
+                'value.old2': '品質の不確実性とリスク',
+                'value.old3': '限定されたスタイル・カテゴリー',
+                'value.old4': '最低注文量・物流手配の難しさ',
+                'value.newTitle': 'LOOMPORTの解決策',
+                'value.new1Bold': 'オンライン・ワンクリック仕入れ',
+                'value.new1': 'で時間・コスト削減',
+                'value.new2Bold': '徹底した品質検品',
+                'value.new2': 'で安心取引',
+                'value.new3Bold': '多様な商品群の確保',
+                'value.new3': 'でビジネス拡大',
+                'value.new4Bold': '柔軟なオーダーシステム',
+                'value.new4': 'で少量から可能',
+                'infra.title': '国境を越える、次世代の供給網',
+                'infra.feature1': '厳格な基準を通過したパートナー供給社',
+                'infra.feature2': '複数セラー商品の統合・適時配送システム',
+                'infra.feature3': '柔軟で安定的なオーダープロセス',
+                'cocreation.title': 'あなたが探すスタイルが、私たちの供給基準です',
+                'cocreation.description': 'LOOMPORTは単なるオープンマーケットではありません。私たちは、パートナー企業と共に成長し、市場を創ります。',
+                'cocreation.quote': '"提案された特定のスタイル、カテゴリー、韓国ブランドを',
+                'cocreation.quoteHighlight': '優先的に開拓',
+                'cocreation.quoteEnd': 'し、あなた専用のインフラを構築します。"',
+                'early.title': '誰よりも早く、始めてください',
+                'early.description': 'LOOMPORTのファウンディング・パートナーとして、',
+                'early.descriptionHighlight': '最優先で利用権',
+                'early.descriptionEnd': 'を。',
+                'early.placeholder': 'メールアドレスを入力',
+                'early.submit': '日本パートナー事前登録 →',
+                'early.successTitle': 'ご登録いただき、誠にありがとうございます',
+                'early.successMessage': '順次、メールにてご連絡させていただきます。',
+                'early.formNote': '登録後、詳細資料と特典のご案内を即座に送付いたします。',
+                'early.benefitTitle': '初期パートナー特典について',
+                'early.benefitText': 'LOOMPORTでは、サービス正式ローンチ後、事前登録いただいた日本パートナーの皆様に向けて初回取引時のコスト負担を軽減する特典を予定しています。',
+                'early.benefitNote': '※ 特典内容は、サービス設計とともに決定予定です。',
+                'footer.tagline': 'ソーシングは選択ではなく、基準であるべきです',
+                'footer.contact': '個別のお問い合わせはLINE公式アカウントへ',
+                'footer.addFriend': '友だち追加 >'
+            },
+            en: {
+                'nav.cta': 'Early Partner Registration',
+                'hero.badge': 'Service Launch: September 2026 | Partner Pre-Registration',
+                'hero.subtitle': 'Want to source Korean vintage?',
+                'hero.title': 'A New Sourcing Infrastructure<br><span class="highlight">for Second-hand Resellers, Small Sellers & Buyers</span>',
+                'hero.description': 'No trips to Korea needed. Source small quantities online with global standard quality inspection. Currently under development.',
+                'hero.cta': 'Early Partner Registration',
+                'hero.note': '※ Service is in preparation. Designed with input from early participants.',
+                'value.title': 'Problems Solved & Value Delivered',
+                'value.oldWay': 'OLD WAY',
+                'value.oldTitle': 'Current Challenges',
+                'value.old1': 'Travel & purchasing burden in Korea',
+                'value.old2': 'Quality uncertainty and risks',
+                'value.old3': 'Limited styles & categories',
+                'value.old4': 'MOQ & logistics difficulties',
+                'value.newTitle': 'The LOOMPORT Solution',
+                'value.new1Bold': 'One-click online sourcing',
+                'value.new1': ' saves time & cost',
+                'value.new2Bold': 'Thorough quality inspection',
+                'value.new2': ' for secure transactions',
+                'value.new3Bold': 'Diverse product range',
+                'value.new3': ' for business expansion',
+                'value.new4Bold': 'Flexible order system',
+                'value.new4': ' for small quantities',
+                'infra.title': 'Cross-Border, Next-Generation Supply Network',
+                'infra.feature1': 'Verified partner suppliers meeting strict standards',
+                'infra.feature2': 'Integrated multi-seller delivery system',
+                'infra.feature3': 'Flexible and stable ordering process',
+                'cocreation.title': 'Your Style Becomes Our Sourcing Standard',
+                'cocreation.description': 'LOOMPORT is not just an open marketplace. We grow with our partners and create the market together.',
+                'cocreation.quote': '"We ',
+                'cocreation.quoteHighlight': 'prioritize sourcing',
+                'cocreation.quoteEnd': ' the specific styles, categories, and Korean brands you suggest, building infrastructure tailored to you."',
+                'early.title': 'Be the First to Start',
+                'early.description': 'As a LOOMPORT founding partner, get ',
+                'early.descriptionHighlight': 'priority access',
+                'early.descriptionEnd': '.',
+                'early.placeholder': 'Enter your email',
+                'early.submit': 'Register as Early Partner →',
+                'early.successTitle': 'Thank you for registering',
+                'early.successMessage': 'We will contact you by email shortly.',
+                'early.formNote': 'After registration, detailed materials and benefits will be sent immediately.',
+                'early.benefitTitle': 'Early Partner Benefits',
+                'early.benefitText': 'LOOMPORT plans to offer benefits to reduce initial transaction costs for pre-registered partners after official launch.',
+                'early.benefitNote': '※ Specific benefits will be determined during service development.',
+                'footer.tagline': 'Sourcing should be a standard, not a choice',
+                'footer.contact': 'For inquiries, contact our LINE official account',
+                'footer.addFriend': 'Add Friend >'
+            },
+            zh: {
+                'nav.cta': '合作夥伴預先登記',
+                'hero.badge': '服務開放預定：2026年9月｜合作夥伴預先招募',
+                'hero.subtitle': '想要採購韓國中古服飾？',
+                'hero.title': '為二手服飾經銷商、小型賣家及買家打造的<br><span class="highlight">全新採購基礎設施</span>',
+                'hero.description': '無需親赴韓國。線上小量採購，享有全球標準品質檢驗。目前建置中。',
+                'hero.cta': '合作夥伴預先登記',
+                'hero.note': '※ 服務準備中，根據早期參與者的意見進行設計。',
+                'value.title': '解決的問題與提供的價值',
+                'value.oldWay': '傳統方式',
+                'value.oldTitle': '過去的困難',
+                'value.old1': '前往韓國出差採購的負擔',
+                'value.old2': '品質不確定性與風險',
+                'value.old3': '款式與品類選擇有限',
+                'value.old4': '最低訂購量與物流安排困難',
+                'value.newTitle': 'LOOMPORT 解決方案',
+                'value.new1Bold': '線上一鍵採購',
+                'value.new1': '節省時間與成本',
+                'value.new2Bold': '嚴格品質檢驗',
+                'value.new2': '交易更安心',
+                'value.new3Bold': '多樣化商品',
+                'value.new3': '助力業務拓展',
+                'value.new4Bold': '彈性訂購系統',
+                'value.new4': '小量起訂',
+                'infra.title': '跨境新世代供應網絡',
+                'infra.feature1': '通過嚴格標準的合作供應商',
+                'infra.feature2': '多賣家商品整合配送系統',
+                'infra.feature3': '靈活穩定的訂購流程',
+                'cocreation.title': '您尋找的風格，就是我們的採購標準',
+                'cocreation.description': 'LOOMPORT 不只是一個開放市場。我們與合作夥伴共同成長，一起創造市場。',
+                'cocreation.quote': '"我們',
+                'cocreation.quoteHighlight': '優先開發',
+                'cocreation.quoteEnd': '您建議的特定風格、品類和韓國品牌，為您打造專屬的供應基礎設施。"',
+                'early.title': '搶先一步，率先開始',
+                'early.description': '成為 LOOMPORT 創始合作夥伴，獲得',
+                'early.descriptionHighlight': '優先使用權',
+                'early.descriptionEnd': '。',
+                'early.placeholder': '請輸入電子郵件',
+                'early.submit': '早期合作夥伴登記 →',
+                'early.successTitle': '感謝您的登記',
+                'early.successMessage': '我們將盡快透過電子郵件與您聯繫。',
+                'early.formNote': '登記後，將立即發送詳細資料與優惠說明。',
+                'early.benefitTitle': '早期合作夥伴福利',
+                'early.benefitText': 'LOOMPORT 計劃在正式上線後，為預先登記的合作夥伴提供減輕首次交易成本的優惠。',
+                'early.benefitNote': '※ 具體優惠內容將隨服務設計確定。',
+                'footer.tagline': '採購應該是標準，而非選擇',
+                'footer.contact': '如有疑問，請聯繫我們的 LINE 官方帳號',
+                'footer.addFriend': '加入好友 >'
+            }
+        };
+
+        // Language switching
+        let currentLang = 'ja';
+
+        function switchLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            document.body.className = `lang-${lang}`;
+            
+            // Update active button
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+
+            // Update all translatable elements
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    el.innerHTML = translations[lang][key];
+                }
+            });
+
+            // Update placeholders
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (translations[lang][key]) {
+                    el.placeholder = translations[lang][key];
+                }
+            });
+
+            // Save preference
+            localStorage.setItem('loomport-lang', lang);
         }
-      };
 
-      let currentLang = 'en';
-
-      function setLanguage(lang) {
-        currentLang = lang;
-        document.querySelectorAll('[data-t]').forEach(el => {
-          const key = el.getAttribute('data-t');
-          if (translations[lang][key]) {
-            el.innerText = translations[lang][key];
-          }
+        // Initialize language buttons
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => switchLanguage(btn.dataset.lang));
         });
-        
-        document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active', 'text-white'));
-        document.getElementById(`btn-${lang}`).classList.add('active', 'text-white');
-      }
 
-      // Scroll header effect
-      let lastScrollY = window.scrollY;
-      window.addEventListener('scroll', () => {
-        const header = document.getElementById('main-header');
-        if (window.scrollY > lastScrollY && window.scrollY > 100) {
-          header.classList.add('nav-hidden');
-        } else {
-          header.classList.remove('nav-hidden');
+        // Load saved language preference
+        const savedLang = localStorage.getItem('loomport-lang');
+        if (savedLang && translations[savedLang]) {
+            switchLanguage(savedLang);
         }
-        lastScrollY = window.scrollY;
-      });
 
-      // Form Handling
-      document.getElementById('contact-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const btn = document.getElementById('submit-btn');
-        const msg = document.getElementById('success-msg');
-        btn.disabled = true;
-        btn.innerText = '...';
-        setTimeout(() => {
-          btn.classList.add('hidden');
-          msg.classList.remove('hidden');
-          e.target.reset();
-        }, 1000);
-      });
-
-      // Initialize
-      setLanguage('en');
-    </script>
-</body>
-</html>
+        // Form submission
+        document.getElementById('partner-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email-input').value;
+            const form = document.getElementById('partner-form');
+            const successMessage = document.getElementById('success-message');
+            const formNote = document.querySelector('.form-note');
+            
+            const googleFormsUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSdciwfbakjf4-ro9Ax_nFTU2InbroaGmVW6CcH7Mbrc7_8CaQ/formResponse';
+            
+            const formData = new FormData();
+            formData.append('entry.1793680931', email);
+            
+            fetch(googleFormsUrl, {
+                method: 'POST',
+         
